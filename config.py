@@ -25,8 +25,8 @@ parser.add_argument("--communication_rounds", type=int, default=20)
 parser.add_argument("--join_ratio", type=float, default=1.0)
 
 parser.add_argument("--eval_gap", type=int, default=1)
-parser.add_argument("--algorithm", type=str, default="FedPAD",
-                    choices=['FedAvg', 'FedAvgM', 'FedProx','SCAFFOLD', 'MOON', 'FedDyn', 'FedGen', 'FedLC', 'FedDM', 'FedAF', 'FedPAD'])
+parser.add_argument("--algorithm", type=str, default="FedTC",
+                    choices=['FedAvg','FedTC', 'FedAvgM', 'FedProx','SCAFFOLD', 'MOON', 'FedDyn', 'FedGen', 'FedLC', 'FedDM', 'FedAF', 'FedPAD'])
 parser.add_argument("--local_epochs", type=int, default=10)
 parser.add_argument("--local_batch_size", type=int, default=256)
 parser.add_argument("--local_learning_rate", type=float, default=0.01)

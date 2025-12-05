@@ -12,6 +12,7 @@ from src.servers.servermoon import MOON
 from src.servers.serverpad import FedPAD
 from src.servers.serverprox import FedProx
 from src.servers.serverscaffold import SCAFFOLD
+from src.servers.serverfedtc import FedTC
 from src.utils.train_utils import setup_seed, get_network, get_logger
 from datasets.utils.dataset_utils import get_dataset_info
 
@@ -66,6 +67,8 @@ def main():
         server = FedAvg(args, 1)
     elif args.algorithm == 'FedAvgM':
         server = FedAvgM(args, 1)
+    elif args.algorithm == 'FedTC':
+        server = FedTC(args, 1)
     elif args.algorithm == 'FedProx':
         server = FedProx(args, 1)
     elif args.algorithm == 'SCAFFOLD':
