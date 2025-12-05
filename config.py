@@ -21,7 +21,7 @@ parser.add_argument("--dir_alpha", type=float, default=0.05)
 # fl global settings
 parser.add_argument("--num_clients", type=int, default=10)
 parser.add_argument("--model", type=str, default="ConvNet", choices=['ConvNet', 'ConvNetBN', 'ResNet18', 'ResNet18BN'])
-parser.add_argument("--communication_rounds", type=int, default=20)
+parser.add_argument("--communication_rounds", type=int, default=500)
 parser.add_argument("--join_ratio", type=float, default=1.0)
 
 parser.add_argument("--eval_gap", type=int, default=1)

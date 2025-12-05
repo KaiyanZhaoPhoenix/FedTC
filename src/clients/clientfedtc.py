@@ -56,7 +56,7 @@ class clientFedTC(clientAVG):
         # 3. 计算 Final Loss 和 Utility (Loss Reduction)
         final_loss = self.get_loss()
         self.utility = initial_loss - final_loss
-        
+
         # 4. 计算 Model Delta (w_k - w_t) 并保存在 CPU 上以节省显存
         self.model_delta = {}
         final_model = self.model.state_dict()
