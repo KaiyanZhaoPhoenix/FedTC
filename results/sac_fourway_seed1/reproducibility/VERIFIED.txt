@@ -1,0 +1,1 @@
+25 runs complete; original source hashes unchanged during study; shared data, initialization, upload/training/evaluation cohorts verified; 16 metric files agree with logs; actual executed replay actions verified; SAC pair agrees until execution diverges; fixed final tensors identical across report attacks. One seed only.

@@ -1,0 +1,27 @@
+\section{Preliminaries}
+\label{sec:preliminaries}
+
+To make our design assumptions explicit before introducing FedTC, we formalize the federated training loop and the two-stage zero-trust threat model.
+
+\paragraph{Federated learning setup.}
+Consider a central server coordinating $K$ clients $\mathcal{K} = \{1, \dots, K\}$, partitioned into an honest majority $\mathcal{H}$ and an adversarial (Byzantine) subset $\mathcal{B}$ with $\mathcal{H}\cap\mathcal{B} = \emptyset$ and $|\mathcal{B}|/K \le \rho_{\max} < 1/2$. Each client $k \in \mathcal{K}$ holds a private non-IID dataset $\mathcal{D}_k$, split locally into a training set $\mathcal{D}_k^{\mathrm{train}}$ and a small held-out validation set $\mathcal{V}_k$. The server's goal is to minimize the average empirical risk over honest participants:
+\begin{equation}
+    f(\mathbf{w}) = \frac{1}{|\mathcal{H}|} \sum_{k \in \mathcal{H}} F_k(\mathbf{w}),
+\end{equation}
+where $F_k(\mathbf{w}) = \mathbb{E}_{(x,y)\sim\mathcal{D}_k}[\ell_{\mathrm{CE}}(\mathbf{w}; x, y)]$ is client $k$'s local cross-entropy loss. Throughout training, the server has \emph{no} access to any clean root or validation data.
+
+In each communication round $t \in \{0, \dots, T-1\}$, the server broadcasts the global model $\mathbf{w}_t \in \mathbb{R}^d$ to a uniformly sampled training cohort $\mathcal{S}_t \subseteq \mathcal{K}$ of size $K_{\mathrm{train}}$. Each client $k \in \mathcal{S}_t$ runs local SGD on $\mathcal{D}_k^{\mathrm{train}}$ and uploads its model update $\Delta\mathbf{w}_k^{(t)} = \mathbf{w}_k^{(t)} - \mathbf{w}_t \in \mathbb{R}^d$, along with a scalar self-reported quality indicator $u_k^{(t)} \in [0, 1]$ (e.g., a bounded summary of its local training loss reduction). The server assigns normalized aggregation weights $\{\alpha_k^{(t)}\}_{k\in\mathcal{S}_t}$ ($\alpha_k^{(t)} \ge 0$, $\sum_{k\in\mathcal{S}_t}\alpha_k^{(t)} = 1$) and updates the global model via
+\begin{equation}
+    \mathbf{w}_{t+1} = \mathbf{w}_t + \Delta\mathbf{w}_g^{(t)},
+    \qquad
+    \Delta\mathbf{w}_g^{(t)} = \sum_{k \in \mathcal{S}_t} \alpha_k^{(t)} \Delta\mathbf{w}_k^{(t)}.
+\end{equation}
+
+\paragraph{Two-stage threat model.}
+In a realistic zero-trust deployment, adversaries in $\mathcal{B}$ can interfere with both aggregation and feedback:
+\begin{enumerate}
+    \item \textbf{Forward model and utility poisoning.} Whenever an adversary $b \in \mathcal{S}_t \cap \mathcal{B}$ is sampled for training, it may upload an arbitrary Byzantine update $\Delta\mathbf{w}_b^{(t)} \in \mathbb{R}^d$---including stealthy boundary-hugging perturbations such as ALIE or Min-Max~\cite{shejwalkar2021manipulating}---while simultaneously falsifying its utility claim $u_b^{(t)} \in [0, 1]$ (e.g., reporting $u_b^{(t)} = 1$ to attract higher weight).
+    \item \textbf{Backward evaluation misreporting.} Whenever an adversary $b \in \mathcal{E}_n \cap \mathcal{B}$ is queried in the decoupled evaluation cohort $\mathcal{E}_n$ at the end of a control macro-step $n$, it may return any arbitrary scalar $\hat{z}_{b,n} \in \mathbb{R}$ instead of its true validation loss improvement. This includes maximal inflation ($+M_{\mathrm{loss}}$), bimodal jamming ($\pm M_{\mathrm{loss}}$), and \emph{minority-silencing echo} (mimicking the honest majority's positive score to drown out negative minority alerts). Honest evaluators $i \in \mathcal{E}_n \cap \mathcal{H}$ report truthfully.
+\end{enumerate}
+
+Taken together, these two threat vectors mean the server can neither trust client claims at face value nor filter feedback using naive majority heuristics. Next, we show how FedTC resolves both sides in a closed loop.

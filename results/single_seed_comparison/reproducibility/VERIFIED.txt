@@ -1,0 +1,1 @@
+All 57 declared runs completed without failures. All paired protocols and source hashes verified. JSON accuracy agrees exactly with native H5 results. Source data unchanged. Final PNG/PDF figures visually reviewed; y-label clipping corrected. One seed only, no inferential intervals.

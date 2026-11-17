@@ -1,0 +1,82 @@
+{
+  "status": "complete",
+  "completed_comparisons": [
+    {
+      "id": "small12_20r_same_value",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_20r_clean",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_20r_delta_sign_flip",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_20r_gaussian",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_20r_feedback_only",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_20r_joint_all_max",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_20r_joint_echo",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_20r_joint_bimodal",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_100r_clean",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_100r_same_value",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_100r_delta_sign_flip",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_100r_gaussian",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_100r_feedback_only",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_100r_joint_all_max",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_100r_joint_bimodal",
+      "exit_code": 0
+    },
+    {
+      "id": "small12_100r_joint_echo",
+      "exit_code": 0
+    },
+    {
+      "id": "full100_100r_clean",
+      "exit_code": 0
+    },
+    {
+      "id": "full100_100r_delta_sign_flip",
+      "exit_code": 0
+    },
+    {
+      "id": "full100_100r_joint_all_max",
+      "exit_code": 0
+    }
+  ],
+  "failures": []
+}

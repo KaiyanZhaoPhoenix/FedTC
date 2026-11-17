@@ -1,7 +1,0 @@
-matplotlib
-wandb
-numpy
-pandas
-torch
-torchvision
-pillow

@@ -1,0 +1,9 @@
+{
+  "original_python_files": 45,
+  "byte_identical": true,
+  "changed_paper_files": [
+    "paper/content/4_methodology.tex",
+    "paper/main.tex"
+  ],
+  "new_paper_status": "paper/content/repository_status.tex"
+}

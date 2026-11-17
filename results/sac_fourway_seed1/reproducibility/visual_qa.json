@@ -1,0 +1,38 @@
+[
+  {
+    "figure": "accuracy_curves",
+    "png_dimensions": [
+      2640,
+      1650
+    ],
+    "png_integrity": "pass",
+    "pdf_header": "pass",
+    "visual_inspection": "pass: axes, labels, legends, marks, overlapping trajectories and clipping inspected",
+    "single_seed": true,
+    "statistical_uncertainty_drawn": false
+  },
+  {
+    "figure": "performance_and_execution",
+    "png_dimensions": [
+      2640,
+      1034
+    ],
+    "png_integrity": "pass",
+    "pdf_header": "pass",
+    "visual_inspection": "pass: axes, labels, legends, marks, overlapping trajectories and clipping inspected",
+    "single_seed": true,
+    "statistical_uncertainty_drawn": false
+  },
+  {
+    "figure": "executed_actions",
+    "png_dimensions": [
+      3080,
+      1320
+    ],
+    "png_integrity": "pass",
+    "pdf_header": "pass",
+    "visual_inspection": "pass: axes, labels, legends, marks, overlapping trajectories and clipping inspected",
+    "single_seed": true,
+    "statistical_uncertainty_drawn": false
+  }
+]

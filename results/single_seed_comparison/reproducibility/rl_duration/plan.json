@@ -1,0 +1,30 @@
+{
+  "purpose": "Optimization-only diagnostic on unchanged saved replay; no new environmental interaction.",
+  "additional_gradient_updates": [
+    0,
+    200,
+    1000,
+    5000
+  ],
+  "scenarios": [
+    "clean",
+    "delta_sign_flip",
+    "joint_all_max"
+  ],
+  "source": "@HOME@/1.MyPaper/ZT-FedTC2ICCV-3\u6708/FedAA_FedTC/runs/single_seed_attack_horizons_20261117",
+  "script_sha256": "f74870afce72f13f13eb9fd04d51756a0a30447e1317c1a7ebb364ddf63fa66f",
+  "controller_source_sha256": "5840d66224ca21fa4f6e385f2ededee9f29d09a5c3ca65363a5891066020de39",
+  "python": "3.9.6 (default, Mar 12 2025, 20:22:46) \n[Clang 17.0.0 (clang-1700.0.13.3)]",
+  "torch": "2.6.0",
+  "numpy": "2.0.2",
+  "threads": 1,
+  "new_fl_rounds": 0,
+  "new_validation_feedback": 0,
+  "popart_updated": false,
+  "limits": [
+    "Retrospective gate checks are not new executed actions or accuracy measurements.",
+    "Fixed single-action replay cannot identify benefits of unseen actions.",
+    "This does not test longer training with fresh interactions.",
+    "TD residuals use moving targets and training data, not held-out targets."
+  ]
+}

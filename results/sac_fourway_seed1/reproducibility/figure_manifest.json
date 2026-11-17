@@ -1,0 +1,31 @@
+{
+  "source": [
+    "results.csv",
+    "learning_curves.csv",
+    "controller_history.csv"
+  ],
+  "figures": [
+    {
+      "file": "accuracy_curves",
+      "encoding": "Raw accuracy every 10 rounds, common 0-100% axes; one seed, no error bars."
+    },
+    {
+      "file": "performance_and_execution",
+      "encoding": "Points; performance axis zoomed and labeled. No seed-level uncertainty. Candidate executions are not gate accuracy."
+    },
+    {
+      "file": "executed_actions",
+      "encoding": "Actual executed actions at every macro; same allowed ranges across panels; no smoothing."
+    }
+  ],
+  "seed": 1,
+  "palette": {
+    "FedTCFixed": "#444444",
+    "FedTC": "#0072B2",
+    "FedTCSAC": "#D55E00",
+    "FedTCSACGate": "#009E73"
+  },
+  "uncertainty": "None: a single paired seed.",
+  "report_source_sha256": "bbcda2ff7a72fdb5cd8e8f5f72cb32f7dd4d00983af612027dbff0a883e5fd36",
+  "alt_text": "Four methods under truthful and three forged-feedback conditions. All panels retain the same model poisoning and fake utility."
+}

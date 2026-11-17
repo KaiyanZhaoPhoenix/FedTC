@@ -1,0 +1,1082 @@
+[
+  {
+    "report": "none",
+    "algorithm": "FedTC",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.05959629267454147,
+      1.3499908447265625
+    ],
+    "candidate_minus_conservative_improvement": 0.0003802529786245401,
+    "candidate_loss": 2.2784163563440485,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTC",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.05739852413535118,
+      1.3739633560180664
+    ],
+    "candidate_minus_conservative_improvement": 0.0012561953321764462,
+    "candidate_loss": 0.35541212303702097,
+    "conservative_loss": 0.3566683183691974,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTC",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.0005868253065273166,
+      1.0543065071105957
+    ],
+    "candidate_minus_conservative_improvement": -0.0006054070966167869,
+    "candidate_loss": 0.26868335127533893,
+    "conservative_loss": 0.2680779441787221,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTC",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      3.989545803051442e-06,
+      1.0500152111053467
+    ],
+    "candidate_minus_conservative_improvement": -0.0005084724941161824,
+    "candidate_loss": 0.2227725333717861,
+    "conservative_loss": 0.22226406087766995,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTC",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      5.995033802719263e-09,
+      1.05
+    ],
+    "candidate_minus_conservative_improvement": -3.686291245125961e-05,
+    "candidate_loss": 0.19466424877986,
+    "conservative_loss": 0.19462738586740874,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTC",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      1.8644844348991718e-11,
+      1.05
+    ],
+    "candidate_minus_conservative_improvement": -7.914758506702857e-06,
+    "candidate_loss": 0.1779579541421559,
+    "conservative_loss": 0.1779500393836492,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSAC",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.09536793828010559,
+      1.5021154880523682
+    ],
+    "candidate_minus_conservative_improvement": 0.0012359953182939254,
+    "candidate_loss": 2.277560614004379,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSAC",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.03683041036128998,
+      1.155738115310669
+    ],
+    "candidate_minus_conservative_improvement": -0.0017237663072894843,
+    "candidate_loss": 0.3565010390849174,
+    "conservative_loss": 0.35477727277762794,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSAC",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.4536263346672058,
+      1.197849154472351
+    ],
+    "candidate_minus_conservative_improvement": 0.004149312398933893,
+    "candidate_loss": 0.2626619706473148,
+    "conservative_loss": 0.2668112830462487,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSAC",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      0.07357101142406464,
+      1.7087839841842651
+    ],
+    "candidate_minus_conservative_improvement": 0.0007176735247596351,
+    "candidate_loss": 0.22283694748189847,
+    "conservative_loss": 0.22355462100665807,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSAC",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      0.07483771443367004,
+      1.4085463285446167
+    ],
+    "candidate_minus_conservative_improvement": 0.0004231231950473825,
+    "candidate_loss": 0.19666178266401202,
+    "conservative_loss": 0.1970849058590594,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSAC",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      0.11133301258087158,
+      1.3116334676742554
+    ],
+    "candidate_minus_conservative_improvement": 0.00034061433864031624,
+    "candidate_loss": 0.18103265784008177,
+    "conservative_loss": 0.18137327217872212,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSACGate",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.09536793828010559,
+      1.5021154880523682
+    ],
+    "candidate_minus_conservative_improvement": 0.0012359953182939254,
+    "candidate_loss": 2.277560614004379,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSACGate",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.03695714473724365,
+      1.1557767391204834
+    ],
+    "candidate_minus_conservative_improvement": -0.0018265499377122488,
+    "candidate_loss": 0.35849486830690963,
+    "conservative_loss": 0.3566683183691974,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSACGate",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.45996034145355225,
+      1.2086482048034668
+    ],
+    "candidate_minus_conservative_improvement": 0.003395162903585401,
+    "candidate_loss": 0.26468278127513667,
+    "conservative_loss": 0.2680779441787221,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSACGate",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      0.08362121880054474,
+      1.7263267040252686
+    ],
+    "candidate_minus_conservative_improvement": 0.0006218482473052,
+    "candidate_loss": 0.2216422126303647,
+    "conservative_loss": 0.22226406087766995,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSACGate",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      0.0862976610660553,
+      1.5251816511154175
+    ],
+    "candidate_minus_conservative_improvement": 0.0003312575310758261,
+    "candidate_loss": 0.19429612833633292,
+    "conservative_loss": 0.19462738586740874,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "none",
+    "algorithm": "FedTCSACGate",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      0.12891261279582977,
+      1.487984299659729
+    ],
+    "candidate_minus_conservative_improvement": 0.0003348998885422544,
+    "candidate_loss": 0.17761513949510693,
+    "conservative_loss": 0.1779500393836492,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTC",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.05959629267454147,
+      1.3499908447265625
+    ],
+    "candidate_minus_conservative_improvement": 0.0003802529786245401,
+    "candidate_loss": 2.2784163563440485,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTC",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.058983705937862396,
+      1.3877795934677124
+    ],
+    "candidate_minus_conservative_improvement": 0.0014141747852037746,
+    "candidate_loss": 0.35525414358399365,
+    "conservative_loss": 0.3566683183691974,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTC",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.0008138582343235612,
+      1.055281639099121
+    ],
+    "candidate_minus_conservative_improvement": -0.0006019225183787919,
+    "candidate_loss": 0.26867986669710087,
+    "conservative_loss": 0.2680779441787221,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTC",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      3.130066761514172e-05,
+      1.0500993728637695
+    ],
+    "candidate_minus_conservative_improvement": -0.0005079912905874015,
+    "candidate_loss": 0.2227720521682573,
+    "conservative_loss": 0.22226406087766995,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTC",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      6.871620144011104e-07,
+      1.0500012636184692
+    ],
+    "candidate_minus_conservative_improvement": -3.685738339167916e-05,
+    "candidate_loss": 0.19466424325080045,
+    "conservative_loss": 0.19462738586740874,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTC",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      3.071423009259888e-07,
+      1.050000548362732
+    ],
+    "candidate_minus_conservative_improvement": -7.915308179672152e-06,
+    "candidate_loss": 0.17795795469182887,
+    "conservative_loss": 0.1779500393836492,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSAC",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.09536793828010559,
+      1.5021154880523682
+    ],
+    "candidate_minus_conservative_improvement": 0.0012359953182939254,
+    "candidate_loss": 2.277560614004379,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSAC",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.037677764892578125,
+      1.155428409576416
+    ],
+    "candidate_minus_conservative_improvement": -0.0023933017390130283,
+    "candidate_loss": 0.35896905942177393,
+    "conservative_loss": 0.35657575768276095,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSAC",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.45651060342788696,
+      1.234449863433838
+    ],
+    "candidate_minus_conservative_improvement": 0.0016136089001311843,
+    "candidate_loss": 0.26238744360635474,
+    "conservative_loss": 0.2640010525064859,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSAC",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      0.07502593100070953,
+      1.7358901500701904
+    ],
+    "candidate_minus_conservative_improvement": 0.002251276269281144,
+    "candidate_loss": 0.22305490935227734,
+    "conservative_loss": 0.22530618562155852,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSAC",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      0.07804378867149353,
+      1.589986801147461
+    ],
+    "candidate_minus_conservative_improvement": 0.00051795517227825,
+    "candidate_loss": 0.19768116681603448,
+    "conservative_loss": 0.19819912198831274,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSAC",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      0.11605033278465271,
+      1.5681359767913818
+    ],
+    "candidate_minus_conservative_improvement": 0.0003322820862466792,
+    "candidate_loss": 0.18209518554155305,
+    "conservative_loss": 0.18242746762779974,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSACGate",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.09536793828010559,
+      1.5021154880523682
+    ],
+    "candidate_minus_conservative_improvement": 0.0012359953182939254,
+    "candidate_loss": 2.277560614004379,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSACGate",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.03766718506813049,
+      1.1554116010665894
+    ],
+    "candidate_minus_conservative_improvement": -0.0018150821577422329,
+    "candidate_loss": 0.3584834005269396,
+    "conservative_loss": 0.3566683183691974,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSACGate",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.44858017563819885,
+      1.2324614524841309
+    ],
+    "candidate_minus_conservative_improvement": 0.0033349443869069182,
+    "candidate_loss": 0.26474299979181515,
+    "conservative_loss": 0.2680779441787221,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSACGate",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      0.0639653205871582,
+      1.7379064559936523
+    ],
+    "candidate_minus_conservative_improvement": 0.0005218038135795551,
+    "candidate_loss": 0.2217422570640904,
+    "conservative_loss": 0.22226406087766995,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSACGate",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      0.06704588234424591,
+      1.606640338897705
+    ],
+    "candidate_minus_conservative_improvement": 0.00026293819558217437,
+    "candidate_loss": 0.19436444767182656,
+    "conservative_loss": 0.19462738586740874,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "all_max",
+    "algorithm": "FedTCSACGate",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      0.09222874045372009,
+      1.6060532331466675
+    ],
+    "candidate_minus_conservative_improvement": 0.00013243868041668021,
+    "candidate_loss": 0.17781760070323252,
+    "conservative_loss": 0.1779500393836492,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTC",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.05959629267454147,
+      1.3499908447265625
+    ],
+    "candidate_minus_conservative_improvement": 0.0003802529786245401,
+    "candidate_loss": 2.2784163563440485,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTC",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.057398486882448196,
+      1.374006748199463
+    ],
+    "candidate_minus_conservative_improvement": 0.0012566180690964709,
+    "candidate_loss": 0.35541170030010094,
+    "conservative_loss": 0.3566683183691974,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTC",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.0005876663490198553,
+      1.054309606552124
+    ],
+    "candidate_minus_conservative_improvement": -0.0006054034054044476,
+    "candidate_loss": 0.2686833475841265,
+    "conservative_loss": 0.2680779441787221,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTC",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      3.731837068698951e-06,
+      1.0500141382217407
+    ],
+    "candidate_minus_conservative_improvement": -0.0005084810174901865,
+    "candidate_loss": 0.2227725418951601,
+    "conservative_loss": 0.22226406087766995,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTC",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      5.639950284574979e-09,
+      1.05
+    ],
+    "candidate_minus_conservative_improvement": -3.686291245125961e-05,
+    "candidate_loss": 0.19466424877986,
+    "conservative_loss": 0.19462738586740874,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTC",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      1.8340069046773877e-11,
+      1.05
+    ],
+    "candidate_minus_conservative_improvement": -7.914758506702857e-06,
+    "candidate_loss": 0.1779579541421559,
+    "conservative_loss": 0.1779500393836492,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSAC",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.09536793828010559,
+      1.5021154880523682
+    ],
+    "candidate_minus_conservative_improvement": 0.0012359953182939254,
+    "candidate_loss": 2.277560614004379,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSAC",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.03673848509788513,
+      1.1558103561401367
+    ],
+    "candidate_minus_conservative_improvement": -0.001543286344979231,
+    "candidate_loss": 0.35718116914258485,
+    "conservative_loss": 0.3556378827976056,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSAC",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.45586809515953064,
+      1.2026073932647705
+    ],
+    "candidate_minus_conservative_improvement": 0.0031748456761174805,
+    "candidate_loss": 0.26370725983393256,
+    "conservative_loss": 0.2668821055100501,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSAC",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      0.07377070188522339,
+      1.7101292610168457
+    ],
+    "candidate_minus_conservative_improvement": 0.0007598866880176424,
+    "candidate_loss": 0.22420752782530246,
+    "conservative_loss": 0.2249674145133201,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSAC",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      0.07466711103916168,
+      1.414522409439087
+    ],
+    "candidate_minus_conservative_improvement": 0.00028235159900669556,
+    "candidate_loss": 0.19774505510783796,
+    "conservative_loss": 0.19802740670684466,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSAC",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      0.11170880496501923,
+      1.315096378326416
+    ],
+    "candidate_minus_conservative_improvement": 0.00034547890051355806,
+    "candidate_loss": 0.18141266483208965,
+    "conservative_loss": 0.18175814373260318,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSACGate",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.09536793828010559,
+      1.5021154880523682
+    ],
+    "candidate_minus_conservative_improvement": 0.0012359953182939254,
+    "candidate_loss": 2.277560614004379,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSACGate",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.03694944083690643,
+      1.1558934450149536
+    ],
+    "candidate_minus_conservative_improvement": -0.0018249821672821603,
+    "candidate_loss": 0.35849330053647954,
+    "conservative_loss": 0.3566683183691974,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSACGate",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.46005338430404663,
+      1.2138373851776123
+    ],
+    "candidate_minus_conservative_improvement": 0.0034011373036081914,
+    "candidate_loss": 0.26467680687511386,
+    "conservative_loss": 0.2680779441787221,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSACGate",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      0.08388520777225494,
+      1.7296022176742554
+    ],
+    "candidate_minus_conservative_improvement": 0.0006248453070464473,
+    "candidate_loss": 0.22163921557062344,
+    "conservative_loss": 0.22226406087766995,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSACGate",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      0.08631648123264313,
+      1.5386478900909424
+    ],
+    "candidate_minus_conservative_improvement": 0.00034214779466961305,
+    "candidate_loss": 0.19428523807273915,
+    "conservative_loss": 0.19462738586740874,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "echo",
+    "algorithm": "FedTCSACGate",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      0.12906454503536224,
+      1.5037802457809448
+    ],
+    "candidate_minus_conservative_improvement": 0.00032339022504180985,
+    "candidate_loss": 0.1776266491586074,
+    "conservative_loss": 0.1779500393836492,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTC",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.05959629267454147,
+      1.3499908447265625
+    ],
+    "candidate_minus_conservative_improvement": 0.0003802529786245401,
+    "candidate_loss": 2.2784163563440485,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTC",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.057123955339193344,
+      1.416372299194336
+    ],
+    "candidate_minus_conservative_improvement": 0.0016444757762800071,
+    "candidate_loss": 0.3550238425929174,
+    "conservative_loss": 0.3566683183691974,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTC",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.00025330818607471883,
+      1.0526832342147827
+    ],
+    "candidate_minus_conservative_improvement": -0.0006108580259605019,
+    "candidate_loss": 0.26868880220468255,
+    "conservative_loss": 0.2680779441787221,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTC",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      3.585500962799415e-06,
+      1.0500218868255615
+    ],
+    "candidate_minus_conservative_improvement": -0.0005084576985650905,
+    "candidate_loss": 0.22277251857623498,
+    "conservative_loss": 0.22226406087766995,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTC",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      3.0319120547517286e-09,
+      1.05
+    ],
+    "candidate_minus_conservative_improvement": -3.686291245125961e-05,
+    "candidate_loss": 0.19466424877986,
+    "conservative_loss": 0.19462738586740874,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTC",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      2.8670316121193196e-10,
+      1.05
+    ],
+    "candidate_minus_conservative_improvement": -7.914758506702857e-06,
+    "candidate_loss": 0.1779579541421559,
+    "conservative_loss": 0.1779500393836492,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSAC",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.09536793828010559,
+      1.5021154880523682
+    ],
+    "candidate_minus_conservative_improvement": 0.0012359953182939254,
+    "candidate_loss": 2.277560614004379,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSAC",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.03778408467769623,
+      1.156067132949829
+    ],
+    "candidate_minus_conservative_improvement": -0.002178221702211481,
+    "candidate_loss": 0.358136879789248,
+    "conservative_loss": 0.35595865808703653,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSAC",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.4562973082065582,
+      1.2062792778015137
+    ],
+    "candidate_minus_conservative_improvement": 0.0036640469196313275,
+    "candidate_loss": 0.26306630147978616,
+    "conservative_loss": 0.2667303483994175,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSAC",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      0.07185229659080505,
+      1.7209035158157349
+    ],
+    "candidate_minus_conservative_improvement": 0.0013855147323592648,
+    "candidate_loss": 0.2241112263781025,
+    "conservative_loss": 0.22549674111046175,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSAC",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      0.07810817658901215,
+      1.4855505228042603
+    ],
+    "candidate_minus_conservative_improvement": 0.0003169881522858111,
+    "candidate_loss": 0.19727080226783222,
+    "conservative_loss": 0.19758779042011804,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSAC",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      0.11024525761604309,
+      1.3868260383605957
+    ],
+    "candidate_minus_conservative_improvement": 0.000403671100038957,
+    "candidate_loss": 0.18136329664464412,
+    "conservative_loss": 0.18176696774468307,
+    "gate_reason": "sac_no_gate"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSACGate",
+    "round": 1,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 0,
+    "candidate": [
+      0.09536793828010559,
+      1.5021154880523682
+    ],
+    "candidate_minus_conservative_improvement": 0.0012359953182939254,
+    "candidate_loss": 2.277560614004379,
+    "conservative_loss": 2.278796609322673,
+    "gate_reason": "warmup"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSACGate",
+    "round": 51,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 25,
+    "candidate": [
+      0.03780503571033478,
+      1.156040072441101
+    ],
+    "candidate_minus_conservative_improvement": -0.001802568444874545,
+    "candidate_loss": 0.35847088681407197,
+    "conservative_loss": 0.3566683183691974,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSACGate",
+    "round": 101,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 50,
+    "candidate": [
+      0.4599643349647522,
+      1.2142822742462158
+    ],
+    "candidate_minus_conservative_improvement": 0.0034009158090597125,
+    "candidate_loss": 0.26467702836966234,
+    "conservative_loss": 0.2680779441787221,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSACGate",
+    "round": 151,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 75,
+    "candidate": [
+      0.0794258713722229,
+      1.7311773300170898
+    ],
+    "candidate_minus_conservative_improvement": 0.0006014743062555189,
+    "candidate_loss": 0.2216625865714144,
+    "conservative_loss": 0.22226406087766995,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSACGate",
+    "round": 201,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 100,
+    "candidate": [
+      0.08999530971050262,
+      1.5731207132339478
+    ],
+    "candidate_minus_conservative_improvement": 0.00034182048258732937,
+    "candidate_loss": 0.19428556538482142,
+    "conservative_loss": 0.19462738586740874,
+    "gate_reason": "value_gap"
+  },
+  {
+    "report": "bimodal",
+    "algorithm": "FedTCSACGate",
+    "round": 251,
+    "scope": "one_round_same_uploads_not_macro_return",
+    "macro": 125,
+    "candidate": [
+      0.12547947466373444,
+      1.5359879732131958
+    ],
+    "candidate_minus_conservative_improvement": 0.00028803577058238156,
+    "candidate_loss": 0.1776620036130668,
+    "conservative_loss": 0.1779500393836492,
+    "gate_reason": "value_gap"
+  }
+]

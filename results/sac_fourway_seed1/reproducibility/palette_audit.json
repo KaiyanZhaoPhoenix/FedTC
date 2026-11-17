@@ -1,0 +1,26 @@
+{
+  "colors": [
+    {
+      "series": "fixed",
+      "color": "#444444",
+      "contrast_on_white": 9.739769120526205
+    },
+    {
+      "series": "original",
+      "color": "#0072B2",
+      "contrast_on_white": 5.185446345779855
+    },
+    {
+      "series": "sac",
+      "color": "#D55E00",
+      "contrast_on_white": 3.8671837898669135
+    },
+    {
+      "series": "sac_gate",
+      "color": "#009E73",
+      "contrast_on_white": 3.421139939945999
+    }
+  ],
+  "redundancy": "Distinct line styles and point markers; no color-only interpretation.",
+  "scope": "Contrast computation only, not a full accessibility certification."
+}

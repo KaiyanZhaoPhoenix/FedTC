@@ -1,0 +1,83 @@
+\section{Proofs of Theoretical Results}
+\label{app:proofs}
+
+\subsection{Proof of Proposition~\ref{prop:non_collapse} (Non-Collapse of Central Clients)}
+\begin{proof}
+By definition of the median $s_t = \operatorname{median}_{j\in\mathcal{S}_t} \delta_j^{(t)}$, at least $\lceil K_{\mathrm{train}} / 2 \rceil$ clients in $\mathcal{S}_t$ satisfy $\delta_k^{(t)} \le s_t$. For every such central client, since $\varepsilon_s > 0$, we have $\tilde{\delta}_k^{(t)} = \delta_k^{(t)} / (s_t + \varepsilon_s) \le 1$.
+Because $\tilde{u}_k^{(t)} \in [0, 1]$, $\lambda_t \in [0, \lambda_{\max}] = [0, 0.5]$, $\tau_t \in [\tau_{\min}, \tau_{\max}] = [1.05, 1.80]$, and $\sigma_0 = 4.0$, the pre-activation score in~\eqref{eq:calibration} is bounded below by
+\[
+(1 - \lambda_t) + \lambda_t \tilde{u}_k^{(t)} - \tau_t \tanh\!\left(\frac{\tilde{\delta}_k^{(t)}}{\sigma_0}\right)
+\ge (1 - \lambda_{\max}) + 0 - \tau_{\max}\tanh\!\left(\frac{1}{\sigma_0}\right)
+= 0.5 - 1.8\tanh(0.25).
+\]
+Using $\tanh(0.25) < 0.24495$, we obtain $0.5 - 1.8 \times 0.24495 = 0.05909 > 0.059 > 0$. Summing over the $\lceil K_{\mathrm{train}} / 2 \rceil$ central clients yields $\sum_{j\in\mathcal{S}_t} c_j^{(t)} > 0.059 \lceil K_{\mathrm{train}} / 2 \rceil > 0$, ensuring exact normalization $\sum_{k\in\mathcal{S}_t} \alpha_k^{(t)} = 1$.
+\end{proof}
+
+\subsection{Proof of Lemma~\ref{lem:mono_lip} (Monotonicity and Lipschitz Stability)}
+\begin{proof}
+Let $g(\tilde{u}, \delta) = (1 - \lambda_t) + \lambda_t \tilde{u} - \tau_t \tanh(\delta / (\sigma_0(s_t + \varepsilon_s)))$ and $c(\tilde{u}, \delta) = [g(\tilde{u}, \delta)]_+$. Since $\lambda_t \ge 0$, $\tau_t > 0$, and $\tanh(\cdot)$ is strictly increasing, $g$ is non-decreasing in $\tilde{u}$ and non-increasing in $\delta$. Because $[\cdot]_+$ is non-decreasing and $1$-Lipschitz, $c$ preserves both monotonicities. Moreover, for any $(\tilde{u}_1, \delta_1)$ and $(\tilde{u}_2, \delta_2)$,
+\[
+|c(\tilde{u}_1, \delta_1) - c(\tilde{u}_2, \delta_2)|
+\le |g(\tilde{u}_1, \delta_1) - g(\tilde{u}_2, \delta_2)|
+\le \lambda_t |\tilde{u}_1 - \tilde{u}_2| + \tau_t \left|\tanh\!\left(\frac{\delta_1}{\sigma_0(s_t+\varepsilon_s)}\right) - \tanh\!\left(\frac{\delta_2}{\sigma_0(s_t+\varepsilon_s)}\right)\right|.
+\]
+Since $\frac{d}{dx}\tanh(x) = \operatorname{sech}^2(x) \in (0, 1]$, the mean value theorem gives $|\tanh(x_1) - \tanh(x_2)| \le |x_1 - x_2|$, which yields~\eqref{eq:lip_bound}.
+\end{proof}
+
+\subsection{Proof of Proposition~\ref{prop:cutoff} (Exact Analytical Cutoff Radius)}
+\begin{proof}
+For any client $k \in \mathcal{S}_t$, regardless of its utility report $\tilde{u}_k^{(t)} \in [0, 1]$, we have $(1 - \lambda_t) + \lambda_t \tilde{u}_k^{(t)} \le 1$. Since $\tau_t \ge \tau_{\min} = 1.05 > 1$, the ratio $1/\tau_t \in (0, 1)$ lies strictly within the domain of $\operatorname{arctanh}$. Whenever $\delta_k^{(t)} \ge R_t(\tau_t) = \sigma_0 (s_t + \varepsilon_s) \operatorname{arctanh}(1/\tau_t)$, we have
+\[
+\tanh\!\left(\frac{\tilde{\delta}_k^{(t)}}{\sigma_0}\right) = \tanh\!\left(\frac{\delta_k^{(t)}}{\sigma_0(s_t+\varepsilon_s)}\right) \ge \frac{1}{\tau_t},
+\]
+and hence
+\[
+(1 - \lambda_t) + \lambda_t \tilde{u}_k^{(t)} - \tau_t \tanh\!\left(\frac{\tilde{\delta}_k^{(t)}}{\sigma_0}\right) \le 1 - \tau_t \cdot \frac{1}{\tau_t} = 0 \implies c_k^{(t)} = 0.
+\]
+Therefore, every client with positive aggregation weight $\alpha_k^{(t)} > 0$ satisfies $\|\Delta\mathbf{w}_k^{(t)} - \boldsymbol{\mu}_{\mathrm{rob}}^{(t)}\|_2 = \delta_k^{(t)} < R_t(\tau_t)$. By the triangle inequality and $\sum_{k\in\mathcal{S}_t} \alpha_k^{(t)} = 1$ (Proposition~\ref{prop:non_collapse}),
+\[
+\big\|\Delta\mathbf{w}_g^{(t)} - \boldsymbol{\mu}_{\mathrm{rob}}^{(t)}\big\|_2
+= \left\|\sum_{k:\alpha_k^{(t)}>0} \alpha_k^{(t)}\big(\Delta\mathbf{w}_k^{(t)} - \boldsymbol{\mu}_{\mathrm{rob}}^{(t)}\big)\right\|_2
+\le \sum_{k:\alpha_k^{(t)}>0} \alpha_k^{(t)} \delta_k^{(t)} < R_t(\tau_t). \qedhere
+\]
+\end{proof}
+
+\subsection{Proof of Proposition~\ref{prop:separation} (Benign--Malicious Separation)}
+\begin{proof}
+For any honest client $h \in \mathcal{H}\cap\mathcal{S}_t$, since $\tilde{u}_h^{(t)} \ge 0$ and $\tilde{\delta}_h^{(t)} \le \tilde{\delta}_{\max}^{\mathcal{H}}$, its pre-activation score is at least $(1 - \lambda_t) - \tau_t \tanh(\tilde{\delta}_{\max}^{\mathcal{H}} / \sigma_0)$, which is strictly positive whenever $\tau_t < (1 - \lambda_t) / \tanh(\tilde{\delta}_{\max}^{\mathcal{H}} / \sigma_0)$. Conversely, for any malicious client $b \in \mathcal{B}\cap\mathcal{S}_t$ with $\tilde{\delta}_b^{(t)} \ge \tilde{\delta}_{\min}^{\mathcal{B}}$ and worst-case $\tilde{u}_b^{(t)} = 1$, its pre-activation score is at most $1 - \tau_t \tanh(\tilde{\delta}_{\min}^{\mathcal{B}} / \sigma_0) \le 0$ whenever $\tau_t \ge 1 / \tanh(\tilde{\delta}_{\min}^{\mathcal{B}} / \sigma_0)$. Under~\eqref{eq:sep_margin}, the open interval between these two bounds is non-empty, and any $\tau_t$ in the intersection with $[\tau_{\min}, \tau_{\max}]$ achieves exact separation.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:ci_containment} (Honest-Minority-Preserving Interval Containment)}
+\begin{proof}
+Let $\mathcal{E}_n^{\mathcal{H}} = \mathcal{E}_n \cap \mathcal{H}$ and $\mathcal{E}_n^{\mathcal{B}} = \mathcal{E}_n \cap \mathcal{B}$, with $B_n = |\mathcal{E}_n^{\mathcal{B}}|$ and $H_n = |\mathcal{E}_n^{\mathcal{H}}| = m - B_n$. Let $\bar{Z}_{\mathcal{E}_n}^{\mathcal{H}} = \frac{1}{H_n}\sum_{i\in\mathcal{E}_n^{\mathcal{H}}} z_{i,n}^{\mathrm{true}}$ be the sample mean of the true honest reports in $\mathcal{E}_n$.
+
+\textbf{Step 1 (Deterministic sandwiching on the good event $\{B_n \le b\}$).}
+Suppose $B_n \le b < m/2$, so $H_n = m - B_n \ge m - b$. Because all server-clipped reports satisfy $z_{i,n} \in [-M_{\mathrm{loss}}, +M_{\mathrm{loss}}]$ and honest clients report $z_{i,n} = z_{i,n}^{\mathrm{true}}$ truthfully, consider removing the largest $b$ elements from the sorted list $z_{(1),n} \le \dots \le z_{(m),n}$ to form $\hat{r}_n^{\mathrm{low}} = \frac{1}{m-b}\sum_{j=1}^{m-b} z_{(j),n}$. Even if all $B_n \le b$ malicious clients report arbitrarily high values (so that at most $B_n$ of them remain in the bottom $m-b$ elements, or if some malicious reports are low), replacing any malicious element in $\{z_{(1),n}, \dots, z_{(m-b),n}\}$ can only occur if an honest element was pushed into the top $b$ positions—which is strictly larger than every retained element. Formally, let $\mathcal{S}_{\mathrm{low}}$ be the indices of the smallest $m-b$ reports in $\mathcal{E}_n$, and $\mathcal{S}_{\mathrm{hon}}^{\mathrm{min}}$ be the indices of the smallest $m-b$ honest reports in $\mathcal{E}_n^{\mathcal{H}}$ (well-defined since $H_n \ge m-b$). Because $\mathcal{S}_{\mathrm{low}}$ consists of the $m-b$ smallest values in a superset containing $\mathcal{E}_n^{\mathcal{H}}$, the $k$-th smallest element of $\mathcal{E}_n$ is at most the $k$-th smallest element of $\mathcal{E}_n^{\mathcal{H}}$ for every $k \in \{1, \dots, m-b\}$. Averaging over $k = 1, \dots, m-b$ gives
+\[
+\hat{r}_n^{\mathrm{low}}
+\le \frac{1}{m-b}\sum_{i\in\mathcal{S}_{\mathrm{hon}}^{\mathrm{min}}} z_{i,n}^{\mathrm{true}}
+\le \frac{1}{H_n}\sum_{i\in\mathcal{E}_n^{\mathcal{H}}} z_{i,n}^{\mathrm{true}}
+= \bar{Z}_{\mathcal{E}_n}^{\mathcal{H}},
+\]
+where the second inequality holds because the average of the smallest $m-b$ elements of a set of size $H_n \ge m-b$ cannot exceed the full set average. By exact symmetry on the largest $m-b$ elements, $\bar{Z}_{\mathcal{E}_n}^{\mathcal{H}} \le \hat{r}_n^{\mathrm{high}}$.
+
+\textbf{Step 2 (Finite-sample concentration).}
+Conditioned on $H_n = m - B_n \ge m - b$, the subset $\mathcal{E}_n^{\mathcal{H}}$ is a uniform sample without replacement of size $H_n$ from $\mathcal{H}$, where each $z_{i,n}^{\mathrm{true}} \in [-M_{\mathrm{loss}}, +M_{\mathrm{loss}}]$ (range $2M_{\mathrm{loss}}$). By Hoeffding's inequality for sampling without replacement~\cite{kairouz2019advances},
+\[
+\mathbb{P}\!\left(\big|\bar{Z}_{\mathcal{E}_n}^{\mathcal{H}} - \bar{Z}_n^\star\big| > \Delta_{\mathrm{samp}} \,\Big|\, B_n \le b\right)
+\le 2\exp\!\left(-\frac{2 H_n \Delta_{\mathrm{samp}}^2}{(2M_{\mathrm{loss}})^2}\right)
+\le 2\exp\!\left(-\frac{m(1-\rho_{\max}-\eta_m)\Delta_{\mathrm{samp}}^2}{2 M_{\mathrm{loss}}^2}\right)
+= \delta_{\mathrm{samp}}.
+\]
+Combining Step 1 and Step 2 via a union bound with $\mathbb{P}(B_n > b) = \delta_{\mathrm{bad}}$ establishes $\mathbb{P}(\bar{Z}_n^\star \in [L_n, U_n]) \ge 1 - (\delta_{\mathrm{bad}} + \delta_{\mathrm{samp}})$.
+\end{proof}
+
+\section{Implementation Details}
+\label{app:impl}
+
+\subsection{Architecture and Hyperparameters}
+All vision experiments use a \textbf{GroupNorm ResNet-18} backbone ($\mathrm{num\_groups}=8$) to prevent BatchNorm running-statistics corruption under $\mathrm{Dir}(\alpha)$ non-IID skew and Byzantine updates. Key FedTC v2.1 hyperparameters are summarized below:
+\begin{itemize}
+    \item \textbf{Forward Calibration Layer:} Weiszfeld geometric median ($15$ iterations, $\varepsilon = 10^{-6}$), $\varepsilon_s = 10^{-8}$, temperature $\sigma_0 = 4.0$, action bounds $\lambda_t \in [0, 0.5]$ and $\tau_t \in [1.05, 1.80]$.
+    \item \textbf{Backward Confidence-Interval Controller:} Macro-step length $H = 5$, bounded evaluation loss cap $M_{\mathrm{loss}} = 5.0$ ($\ge \ln 100$), evaluator cohort size $m = 20$, conservative reference policy $\mathbf{a}_{\mathrm{cons}} = (0.0, 1.35)$, fallback tolerance $\xi_{\mathrm{tol}} = 0.05$, and PopArt EMA rate $\beta = 0.05$ with two-layer $64$-unit SiLU MLP critics/actor.
+\end{itemize}

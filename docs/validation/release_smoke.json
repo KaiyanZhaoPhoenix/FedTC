@@ -1,0 +1,70 @@
+{
+  "protocol_verified": true,
+  "checks": [
+    "native data",
+    "private splits",
+    "initial parameters",
+    "common training/evaluation configuration",
+    "malicious identities",
+    "training/upload schedules"
+  ],
+  "algorithms": [
+    "FedAA",
+    "FedTC",
+    "FedTCFixed",
+    "FedTCSAC",
+    "FedTCSACGate",
+    "FedAvg",
+    "RFA",
+    "TrimmedMean",
+    "MultiKrum"
+  ],
+  "runs": [
+    {
+      "algorithm": "FedAA",
+      "rounds": 6,
+      "status": "complete"
+    },
+    {
+      "algorithm": "FedTC",
+      "rounds": 6,
+      "status": "complete"
+    },
+    {
+      "algorithm": "FedTCFixed",
+      "rounds": 6,
+      "status": "complete"
+    },
+    {
+      "algorithm": "FedTCSAC",
+      "rounds": 6,
+      "status": "complete"
+    },
+    {
+      "algorithm": "FedTCSACGate",
+      "rounds": 6,
+      "status": "complete"
+    },
+    {
+      "algorithm": "FedAvg",
+      "rounds": 6,
+      "status": "complete"
+    },
+    {
+      "algorithm": "RFA",
+      "rounds": 6,
+      "status": "complete"
+    },
+    {
+      "algorithm": "TrimmedMean",
+      "rounds": 6,
+      "status": "complete"
+    },
+    {
+      "algorithm": "MultiKrum",
+      "rounds": 6,
+      "status": "complete"
+    }
+  ],
+  "scope": "Migration/integration smoke only; not a performance experiment."
+}

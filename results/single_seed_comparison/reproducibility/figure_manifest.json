@@ -1,0 +1,70 @@
+{
+  "purpose": "Exploratory experiment report, not submission-ready evidence",
+  "matplotlib_version": "3.9.4",
+  "figures": [
+    {
+      "stem": "@RUN@/small12_20rounds_accuracy",
+      "alt_text": "Unsmoothed accuracy trajectories for all 8 declared scenarios, 12 clients, 20 rounds, one seed. All axes use 0 to 100 percent. Overlapping curves are retained.",
+      "uncertainty": "None: one seed; repeated checkpoints are not independent replicates.",
+      "source": "learning_curves.csv",
+      "transform": "accuracy fraction multiplied by 100; straight lines connect observed checkpoints every five rounds; no smoothing.",
+      "pixels": [
+        3400,
+        1700
+      ],
+      "dpi": [
+        250.01219999999998,
+        250.01219999999998
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "stem": "@RUN@/small12_100rounds_accuracy",
+      "alt_text": "Unsmoothed accuracy trajectories for all 8 declared scenarios, 12 clients, 100 rounds, one seed. All axes use 0 to 100 percent. Overlapping curves are retained.",
+      "uncertainty": "None: one seed; repeated checkpoints are not independent replicates.",
+      "source": "learning_curves.csv",
+      "transform": "accuracy fraction multiplied by 100; straight lines connect observed checkpoints every five rounds; no smoothing.",
+      "pixels": [
+        3400,
+        1700
+      ],
+      "dpi": [
+        250.01219999999998,
+        250.01219999999998
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "stem": "@RUN@/full100_100rounds_accuracy",
+      "alt_text": "Unsmoothed accuracy trajectories for all 3 declared scenarios, 100 clients, 100 rounds, one seed. All axes use 0 to 100 percent. Overlapping curves are retained.",
+      "uncertainty": "None: one seed; repeated checkpoints are not independent replicates.",
+      "source": "learning_curves.csv",
+      "transform": "accuracy fraction multiplied by 100; straight lines connect observed checkpoints every five rounds; no smoothing.",
+      "pixels": [
+        3400,
+        950
+      ],
+      "dpi": [
+        250.01219999999998,
+        250.01219999999998
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "stem": "@RUN@/small12_paired_differences",
+      "alt_text": "Left: dynamic FedTC minus FedAA. Right: dynamic FedTC minus fixed FedTC. Panels explicitly use different x-axis scales. Hollow squares denote 20 rounds and filled circles 100 independently trained rounds for all eight scenarios. Zero denotes equal final accuracy.",
+      "uncertainty": "None: a single paired seed, not statistical significance.",
+      "source": "paired_differences.csv",
+      "transform": "Subtract final accuracy percentages within each scenario and training budget.",
+      "pixels": [
+        3150,
+        1275
+      ],
+      "dpi": [
+        250.01219999999998,
+        250.01219999999998
+      ],
+      "mode": "RGBA"
+    }
+  ]
+}

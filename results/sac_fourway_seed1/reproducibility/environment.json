@@ -1,0 +1,9 @@
+{
+  "python": "3.9.6",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "torch": "2.6.0",
+  "numpy": "2.0.2",
+  "device": "cpu",
+  "threads_per_run": 1,
+  "concurrent_runs": 4
+}

@@ -1,0 +1,20 @@
+{
+  "task": "Known concave two-action one-step reward; implementation sanity only, not federated performance.",
+  "seed": 1,
+  "interactions": 600,
+  "initial_action": [
+    0.05993865430355072,
+    1.3500045537948608
+  ],
+  "final_action": [
+    0.4874405860900879,
+    1.7830979824066162
+  ],
+  "optimal_action": [
+    0.4,
+    1.65
+  ],
+  "initial_squared_error": 2.490248203277588,
+  "final_squared_error": 0.24830758571624756,
+  "train_steps": 2340
+}

@@ -1,0 +1,36 @@
+[
+  {
+    "study": "single_seed_comparison",
+    "archived_files_verified": 544,
+    "runs_verified": 57,
+    "tuning_runs_verified": 0,
+    "checks": [
+      "archive file hashes",
+      "raw accuracy/curves",
+      "post-warmup execution counts",
+      "shared data/initialization/training schedules"
+    ],
+    "historical_source_differences": [
+      "main.py",
+      "servers/serverFedTC.py",
+      "servers/serverShared.py"
+    ],
+    "checkpoint_checks": "Not repeated: model and replay checkpoints are not published.",
+    "scope": "Single-seed measurements; not an independent training reproduction or a significance test."
+  },
+  {
+    "study": "sac_fourway_seed1",
+    "archived_files_verified": 286,
+    "runs_verified": 16,
+    "tuning_runs_verified": 9,
+    "checks": [
+      "archive file hashes",
+      "raw accuracy/curves",
+      "post-warmup execution counts",
+      "shared data/initialization/training schedules"
+    ],
+    "historical_source_differences": [],
+    "checkpoint_checks": "Not repeated: model and replay checkpoints are not published.",
+    "scope": "Single-seed measurements; not an independent training reproduction or a significance test."
+  }
+]

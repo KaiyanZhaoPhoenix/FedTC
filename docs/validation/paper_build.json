@@ -1,0 +1,12 @@
+{
+  "pages": 11,
+  "pdf_sha256": "f3125bbd77ffb2181e72f8733bee2dcb6a4f949b1b57cf7678bc6cee4c904ae0",
+  "build": "latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex",
+  "undefined_references_or_citations": false,
+  "overfull_boxes": false,
+  "remaining_warnings": [
+    "template empty anchor",
+    "underfull hbox/vbox spacing"
+  ],
+  "visual_review": "All 11 rendered pages inspected; wide trimmed-bound equation and forced blank space corrected; legacy framework labels marked."
+}

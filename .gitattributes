@@ -1,0 +1,10 @@
+* text=auto eol=lf
+# Preserve historical source/data-record bytes so published SHA-256 checks are portable.
+code/** -text
+results/** -text
+paper/** -text
+*.png binary
+*.jpg binary
+*.pdf binary
+*.gz binary
+*.h5 binary

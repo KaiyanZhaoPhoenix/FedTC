@@ -1,0 +1,43 @@
+test_average_ties_and_fake_utility_rank (test_forward.ForwardTests) ... ok
+test_calibration_matches_scalar_formula (test_forward.ForwardTests) ... ok
+test_coincident_points_and_single_client (test_forward.ForwardTests) ... ok
+test_geometric_median_resists_outlier (test_forward.ForwardTests) ... ok
+test_invalid_values_fail_explicitly (test_forward.ForwardTests) ... ok
+test_known_geometric_median (test_forward.ForwardTests) ... ok
+test_non_collapse_and_convex_bound (test_forward.ForwardTests) ... ok
+test_rotation_and_permutation_equivariance (test_forward.ForwardTests) ... ok
+test_state_uses_mean_raw_scale_before_log (test_forward.ForwardTests) ... ok
+test_explicit_consistent_popart_target_includes_mean_compensation (test_integration.BaselineTests) ... ok
+test_multikrum_rejects_remote_outlier_and_invalid_bound (test_integration.BaselineTests) ... ok
+test_sample_weighted_fedavg_and_coordinate_trim (test_integration.BaselineTests) ... ok
+test_comparison_checks_provenance_and_detects_schedule_change (test_integration.FrameworkTests) ... ok
+test_fedtc_never_reads_root_data_and_feedback_never_reads_test (test_integration.FrameworkTests) ... ok
+test_holdout_is_disjoint_complete_stable (test_integration.FrameworkTests) ... ok
+test_inherits_upstream_training_and_metrics (test_integration.FrameworkTests) ... ok
+test_local_rng_independent_of_controller_and_first_round_updates_match (test_integration.FrameworkTests) ... ok
+test_original_server_npz_loading_and_native_parameter_broadcast (test_integration.FrameworkTests) ... ok
+test_sampled_training_leaves_other_clients_untrained (test_integration.FrameworkTests) ... ok
+test_sgd_uses_only_training_split_with_native_clipping (test_integration.FrameworkTests) ... ok
+test_upstream_and_delta_sign_flip_are_distinct_and_deterministic (test_integration.FrameworkTests) ... ok
+test_checkpoint_restores_replay_rng_and_optimizer (test_interval_controller.ControllerTests) ... ok
+test_gate_and_executed_action_replay (test_interval_controller.ControllerTests) ... ok
+test_learning_updates_actor_and_both_critics (test_interval_controller.ControllerTests) ... ok
+test_popart_preserves_predictions_and_actions_for_same_raw_state (test_interval_controller.ControllerTests) ... ok
+test_saturated_actor_respects_exact_python_action_endpoints (test_interval_controller.ControllerTests) ... ok
+test_terminal_td_target_does_not_bootstrap (test_interval_controller.ControllerTests) ... ok
+test_clipping_and_invalid_cohort (test_interval_controller.IntervalTests) ... ok
+test_hypergeometric_against_enumeration (test_interval_controller.IntervalTests) ... ok
+test_minority_negative_reports_survive_in_lower_bound (test_interval_controller.IntervalTests) ... ok
+test_rounding_uses_honest_integer_count (test_interval_controller.IntervalTests) ... ok
+test_trimmed_bounds_cover_honest_cohort_for_all_extreme_attacks (test_interval_controller.IntervalTests) ... ok
+test_sac_variants_no_root_and_utility_and_audit_logging (test_sac.SACIntegrationTests) ... ok
+test_checkpoint_restores_learning_and_action_rng_without_global_rng_use (test_sac.SACTests) ... ok
+test_gate_toggle_and_replay_store_actual_executed_action (test_sac.SACTests) ... ok
+test_gate_variants_train_identically_given_identical_data (test_sac.SACTests) ... ok
+test_gaussian_action_bounds_and_log_jacobian (test_sac.SACTests) ... ok
+test_soft_entropy_never_enters_gate_targets_and_terminal_no_bootstrap (test_sac.SACTests) ... ok
+
+----------------------------------------------------------------------
+Ran 38 tests in 1.714s
+
+OK

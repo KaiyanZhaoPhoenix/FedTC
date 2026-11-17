@@ -1,0 +1,64 @@
+{
+  "upstream_url": "https://github.com/Gp1g/FedAA",
+  "commit": "1fba884934cbec1b3506812d9d612e6a181b1d79",
+  "unchanged_components": {
+    "clients/clientFedAA.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "80498d38f3617098af0dd27cb1c8d7e6f2c1da59c202853871c46cc826264b01"
+    },
+    "DDPG/DDPG.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "4d87a2d8da517676858249154ffcad6732d16662ba0cd67bcc163b05cb5335d8"
+    },
+    "DDPG/environment.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "3a19a5e60363ea3f917f472df42c2828c44c24afdc2f2572e06d5eec224cfa1c"
+    },
+    "utils/models.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "3852c95490905b854a4ce0c3252de21aae7b975287b2e8e9065efbd5390119f7"
+    },
+    "utils/resnet.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "8234c0313805660b4a28aebf36059d80c6bb951f223591168ea9b5be00042c98"
+    },
+    "dataset/dataset_utils.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "8c67b3640e4746bc42f7877da9ffc81bea3371cbc5ca920eff31dbc73c518529"
+    },
+    "dataset/generate_cifar10.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "80f416393f5a16134e650fb71ab7ae48ae25992f60c598caaade88a87c474753"
+    },
+    "dataset/generate_mnist.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "87b0682df7cbc2977d656f029364779894773322a16afb688c8a51bb90ff9ed0"
+    },
+    "dataset/generate_synthetic_0_0.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "31a503b91403b079e56dad36d35cbe6aefb7074025581a41db78fa6fcfa9ebac"
+    },
+    "dataset/generate_synthetic_1_1.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "151f557f89e87b1139f886519ffce1bcfc4eea8722dfd02f7345513a0741c138"
+    },
+    "dataset/generate_emnist.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "e22270d8f7305f4aaa3871aee9309000bac14e2a49d08a2108ecb33334ff3c00"
+    },
+    "dataset/generate_fmnist.py": {
+      "unchanged_from_upstream": true,
+      "sha256": "182e54d0769c2114c06f92939d305b15e267abfdf1bf70adf23e6ed4c5b8063c"
+    }
+  },
+  "fedtc_core_source": "../code_fedtc/fedtc (forward.py, interval.py, controller.py); copied locally; no runtime dependency",
+  "adaptations": [
+    "shared comparison loop",
+    "common held-out validation split",
+    "data-root configuration and server NPZ reader fix",
+    "AUC results persistence",
+    "FedAA externally supplied cohort and zero-distance guard",
+    "FedTC explicit optional PopArt-consistent TD variant"
+  ],
+  "notes": "Original README and main retained as README.upstream.md and upstream_main.py. No upstream license file found; no new license assigned."
+}

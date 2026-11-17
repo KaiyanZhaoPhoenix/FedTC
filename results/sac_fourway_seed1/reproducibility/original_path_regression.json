@@ -1,0 +1,7 @@
+{
+  "old_run": "runs/single_seed_attack_horizons_20261117/full100_100r_joint_all_max/FedTC",
+  "new_run": "runs/sac_fourway_seed1_20261117/main/none/FedTC",
+  "comparison": "Both paths always executed the conservative action. Different feedback/controller budgets do not affect forward aggregation.",
+  "first100_weight_vectors_exactly_equal": true,
+  "round100_accuracy_exactly_equal": true
+}

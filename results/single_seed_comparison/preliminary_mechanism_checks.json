@@ -1,0 +1,17 @@
+[
+  {
+    "scenario": "clean",
+    "rounds_with_identical_aggregation_weights": 100,
+    "rounds": 100
+  },
+  {
+    "scenario": "delta_sign_flip",
+    "rounds_with_identical_aggregation_weights": 100,
+    "rounds": 100
+  },
+  {
+    "scenario": "feedback_only",
+    "rounds_with_identical_aggregation_weights": 100,
+    "rounds": 100
+  }
+]
