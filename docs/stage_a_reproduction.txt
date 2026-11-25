@@ -1,0 +1,45 @@
+Stage A 最小三线对照
+
+目标与实现
+
+每条轨迹训练 40 轮。在第 1、6、11、16、21、26、31、36 轮选动作，沿用五轮。六个离散动作为 λ∈{0,0.3} 与 τ∈{1.15,1.35,1.65} 的笛卡尔积。每轮从 24 个客户端抽取 12 个。服务器复用 FedTC 的 calibrate、macro_state 和 IntervalEstimator。数据管线与本地模型是独立诊断实现，每个客户端在每轮进行 4 次 batch size 32 的 softmax 头 SGD。效用为同一个本地训练探针批次上更新前后的交叉熵改善，负值截为零。三种方法每条轨迹各 480 次训练上传和 128 份宏步验证报告。
+
+Static Best 在六个校准种子上完整运行全部六组参数，按场景主指标的私有验证均值选一组，全程固定。两种学习器共享另外 48 条探索轨迹，每个阶段的六个动作各被实际执行八次。两者都用同一组状态特征、岭正则和同一套代码，并在每个测试轨迹的宏步结束后用该轨迹新增经验更新，下一条轨迹重新从共同的开发经验开始。在线控制没有看到测试标签、恶意身份、切换标志或尾类身份。
+
+控制器观察上一宏步的五项几何统计、已实现的区间下端和宽度、进度以及上次动作。16 个独立抽样的评估客户端报告宏步起点与终点的截断损失改善。区间估计器使用损失截断 5、ρmax=0.2 和默认失败概率。动作以风险偏好分数 0.75L+0.25U 作为即时目标；训练时消去与动作无关、跨宏步固定的抽样项。CI-Bandit 从过去已执行动作的标签预测当前五轮收益。CI-RL 在相同转移上做 8 次拟合 Q 备份、γ=0.9，终点不 bootstrap。选择时只访问决策前状态。两者均为单一风险分数的线性近似，未启用论文的双区间 critic、PopArt 和执行级 fallback gate。前向解析聚合自身的零权重回退仍按仓库实现执行。
+
+两个场景
+
+切换场景使用原生 FedAA MNIST 的客户端样本，固定池化图像特征，拟合、固定动作校准与留出评估分别使用互斥的客户端池。前 20 轮干净，后 20 轮从固定的 4/24 个参与者注入固定强度 ALIE 型模拟更新与最高排名效用。模拟器在入选的恶意上传中使用该轮干净更新的坐标均值减一倍标准差，属于可访问干净更新统计的基准设置。验证报告保持诚实。主要指标为全局样本平均准确率。切换时刻固定，进度可用，因此也可能学到时间表。
+
+长尾场景使用官方 CIFAR-100 原始训练集，从类别 0 到 99 按等比递减方式分别保留 500 至 50 个样本（10:1），每个种子逐类按 Dirichlet(0.1) 分配给 24 个客户端。每客户端留出约 20% 私有验证。固定使用类 80–99 作为测试尾类，报告各类准确率的等权平均。测试集为官方平衡测试集。为控制原型成本，在 64×64 图像上提取固定 ImageNet 预训练 SqueezeNet1.1 特征，仅联邦训练 100 类分类头。训练集特征用于标准化，测试数据只参与冻结特征提取与指标记录。留出种子改变分区、批次等，底层图像和官方测试集共享。此设置验证的是冻结特征上的分类头训练。ALIE 型扰动与长尾划分均为实验条件，贪心犯错或少数派饥饿需从数据判断。
+
+复现
+
+从 code/ 目录执行。MNIST 使用 dataset/prepare_mnist.py 获取或核验原始数据。准备 CIFAR-100 编码缓存时将两个公开文件放入 runs/stage_a_data，文件名分别为 cifar-100-python.tar.gz 和 squeezenet1_1-b8a52dc0.pth。准备脚本先核对数据集 MD5 与编码器 SHA-256。框架使用仓库原有 PyTorch、torchvision、NumPy、matplotlib 环境。
+
+    mkdir -p runs/stage_a_data
+    curl -fL https://cave.cs.toronto.edu/kriz/cifar-100-python.tar.gz -o runs/stage_a_data/cifar-100-python.tar.gz
+    curl -fL https://download.pytorch.org/models/squeezenet1_1-b8a52dc0.pth -o runs/stage_a_data/squeezenet1_1-b8a52dc0.pth
+    .venv/bin/python dataset/prepare_mnist.py
+    .venv/bin/python -m diagnostics.stage_a_data --folder runs/stage_a_data
+    .venv/bin/python -m diagnostics.run_stage_a --scenario switch --output runs/stage_a_replay/switch
+    .venv/bin/python -m diagnostics.run_stage_a --scenario longtail --output runs/stage_a_replay/longtail
+    .venv/bin/python -m diagnostics.plot_stage_a runs/stage_a_replay
+
+每个场景使用新的输出目录。protocol.json 记录种子与实验条件，development.json 记录公共探索转移和固定动作校准分数，held.json 记录动作、决策前状态、Q 分数、实测区间、下一状态、权重统计和逐窗口评测。summary.json 给出 16 个留出种子上的配对均值差和 percentile bootstrap 区间。每条策略主线采样相同训练与验证队列、初始化和本地批次。三种方法的离线开发成本不同；480 次上传仅指每条评测轨迹。图为平均学习曲线，相关区间按种子而非通信轮计算。
+
+资料来源
+
+CIFAR 数据作者页面 https://www.cs.toronto.edu/~kriz/cifar.html
+公开编码器 https://download.pytorch.org/models/squeezenet1_1-b8a52dc0.pth
+ALIE 原文 https://proceedings.neurips.cc/paper/2019/hash/ec1c59141046cd1866bbbcdfb6ae31d4-Abstract.html
+
+地板效应的两个补充检查
+
+标准随机头的六个固定动作在校准集上均为 0% 尾类准确率。第一次补充实验给所有方法相同的训练类先验，在本地 SGD 的 softmax logits 加训练集 log 类频率，评测仍使用原始 logits。拟合、校准、测试轨迹种子均增加 1000。其校准集六动作最好仍低于 1%。第二次单独使用原始训练损失，改为从已有尾类识别能力出发：客户端仅从本地训练样本累积各类的冻结特征和；归一化全局类方向作共同的分类头初值，偏置为零。该共同初始化需要一轮额外的类别统计交换。种子均增加 2000。两次干预均作用于组内全部策略；各版本的初值、额外统计和种子不同，不能把跨版本的绝对差归给 γ。第二个补充实验记录第 0 轮起的曲线。
+
+    .venv/bin/python -m diagnostics.run_stage_a --scenario longtail --balanced-head --output runs/stage_a_replay/longtail_balanced
+    .venv/bin/python -m diagnostics.run_stage_a --scenario longtail --prototype-init --output runs/stage_a_replay/longtail_prototype
+    .venv/bin/python -m diagnostics.plot_stage_a runs/stage_a_replay --balanced
+    .venv/bin/python -m diagnostics.plot_stage_a runs/stage_a_replay --prototype

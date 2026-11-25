@@ -1,0 +1,62 @@
+配对反馈与长期回报控制复现
+
+从 code/ 运行。MNIST 使用仓库原生分区，CIFAR-100 的冻结特征准备见 docs/stage_a_reproduction.txt。下列 base 为任意新的本地运行目录。第一次实验在 runs/paired_feedback_20261125 中。各开发命令要求新的输出目录，避免覆盖已有测量。
+
+    base=runs/paired_feedback_replay
+    .venv/bin/python -m diagnostics.run_paired_feedback_control --scenario switch --output "$base/mnist"
+    .venv/bin/python -m diagnostics.run_paired_feedback_control --scenario longtail --output "$base/cifar"
+    .venv/bin/python -m diagnostics.challenge_paired_feedback --folder "$base/mnist" --phase lock
+    .venv/bin/python -m diagnostics.challenge_paired_feedback --folder "$base/mnist" --phase held
+
+首轮在相同五轮窗口内固定客户端权重混合比例和服务器步长。前者在中心零惩罚校准的 (.3,1.05) 与按各上传者训练样本数加权之间插值，混合比例为 0、0.5、1，服务器步长为 1、2、4、8。开发用 10 个种子选择最优固定动作。再从 32 条训练轨迹的每个宏步起点把 12 个动作都执行一次，随后都走同一固定策略，至多再走两个宏步。其间同一种子的上传者、验证者、批次和扰动一致。即时目标为当前五轮的实测改善。长期目标把后续实测改善按 0.9 折扣相加。每个状态内中心化 12 个回报做岭回归，两种学习器共享全部分支数据。它们估计执行该动作后回到固定策略的有限时域回报，近似一次策略改进。训练/验证/留出分开，公布的学习器部署时冻结。
+
+每个五轮窗口的首轮，控制器在同一份上传上构造候选模型。16 个独立抽样、诚实报告的验证客户端分别评估原模型及候选模型，提供错误率和截断交叉熵。服务器风险分数使用按样本数加权的错误率加 0.15 倍截断交叉熵。训练、选参和控制均不访问官方测试标签、模拟污染者身份或已知诚实者身份。实验中的“尾类”是类级指标，原始 MLP 实验中的 Worst10% 是客户端级指标。不得混作同一指标。
+
+12 个开发种子用于选择正则化。增强时间表对照另用 10 个开发种子，在原时间表、学习策略逐窗众数、24 种手写步长衰减表之间选择。最终逐种子配对，24 个新种子评测。纯策略 480 次训练上传。双分支验证法第一轮上传共享，其后按实际执行的额外四轮计费。每个分支的私有端点分数及执行动作见 trace。主实验 held.json 还记录验证评测次数，各方法的私有评测预算与无控制的自然运行成本不同。
+
+    .venv/bin/python -m diagnostics.round_feedback_mnist --policy "$base/mnist/policy.json" --output "$base/round_mnist" --phase dev
+    .venv/bin/python -m diagnostics.round_feedback_mnist --policy "$base/mnist/policy.json" --output "$base/round_mnist" --phase held
+    .venv/bin/python -m diagnostics.fit_round_feedback --phase dev --parent-policy "$base/mnist/policy.json" --output "$base/residual"
+    .venv/bin/python -m diagnostics.fit_round_feedback --phase held --output "$base/residual"
+    .venv/bin/python -m diagnostics.fit_round_feedback --phase dev --direction-family validation --parent-policy "$base/mnist/policy.json" --output "$base/validated"
+    .venv/bin/python -m diagnostics.fit_round_feedback --phase held --output "$base/validated"
+
+第二轮锁定增强时间表的步长，比较相同的聚合方向选择每五轮或每轮执行。先在 16 个开发种子选出私有打分方式，再用 32 个全新种子评测。继续做学习型比较时，使用另 36 个训练种子、16 个选参种子、32 个留出种子。每个训练种子从最前 48 个原生客户端随机抽取 24 个，留出使用后面互斥的两个池。所有方法共享数据划分、初始化和本地 SGD。每次控制前只看已经收到的本轮上传和同轮私有验证反馈。单批上传获选后直接提交，不在部署阶段追加本地训练。每轮学习器的 0.9 折扣以通信轮为单位，实测当前轮至多再接九轮固定时间表的后果。近视模型用相同设计矩阵和训练样本，只用当前轮的实测反馈。时间对照另包含提前和后半程不同的混合比例，按相同验证口径选优。
+
+按 validation 运行时，参与反馈的十六人均匀随机分为互斥的两组。前八人各自计算本地验证交叉熵对本轮每份上传的方向导数，只回传标量。服务器用经截断和标准化的方向收益乘性调整样本权重。三种候选分别使用全调整、半调整和原权重，另外八人评估这三种候选的实际分类错误率和截断损失。算法每轮需要额外私有评测。模拟器为本地核验集中存放数据，实际协议允许客户端本地计算。本次未测量联网通信时延或恶意验证报告。
+
+    .venv/bin/python -m diagnostics.transfer_paired_mnist --policy "$base/mnist/policy.json" --output "$base/native"
+    .venv/bin/python -m diagnostics.native_validated_directions --policy "$base/validated/policy.json" --baseline "$base/native/held.json" --output "$base/native_validated"
+
+原生 85% 对照依照已有 MLP 实验，使用客户端 72–95、split_seed=3103、25% 本地验证、相同的分组上传日程、无模拟污染和原版客户端 SGD。基线前 35 轮固定 τ=1.15，最后五轮比较 1.15 和 1.55 分支，使用原口径选出终点。它实际消耗 528 次上传，单轨策略 480 次。MLP 与 Stage A 的特征、优化器、可用性条件和准确率尺度不同。对迁移试验分别记录初始化、原始样本、客户端划分和上传日程的哈希。所有轨迹结束后才评测测试集。对后续的逐客户端验证方向实验，服务器步长固定为原生值 1，原始几何权重使用 (0,1.15)。
+
+每组的 protocol.json 记录种子，policy.json 为冻结的可运行策略，*_summary.json 或 summary.json 给出终点与配对区间。区间使用固定随机种子的 20000 次按实验种子配对 bootstrap。留出种子复用客户端池或官方测试图像，反映这些数据上的训练随机性。单独部署某个已冻结策略无需重训。下面两条命令分别运行五轮控制和逐轮控制。
+
+    .venv/bin/python -m diagnostics.challenge_paired_feedback --folder "$base/mnist" --phase deploy --method rl --seed 16001
+    .venv/bin/python -m diagnostics.fit_round_feedback --output "$base/validated" --phase deploy --method direct --seed 16001
+
+原生 MLP 的独立拟合实验
+
+    .venv/bin/python -m diagnostics.fit_native_step_control --phase dev --output "$base/native_fit"
+    .venv/bin/python -m diagnostics.fit_native_step_control --phase held --output "$base/native_fit"
+    .venv/bin/python -m diagnostics.fit_native_step_control --phase deploy --method rl --seed 16200 --output "$base/native_fit"
+    .venv/bin/python -m diagnostics.fit_round_feedback --phase confirm --output "$base/residual"
+
+原生拟合将服务器步长限制为 0.5、1.0、1.5，使用原几何参数 (0,1.15)，各组都保留最后五轮 1.15/1.55 的原有配对验证。训练时在 24 条轨迹各选两个起点，三个步长分别执行五轮，若还有下一周期，都以步长 1 接续五轮。分支共用客户端、批次与随机流。学习器读取每个候选在当前、已公布的下一窗口上传群体、全体客户端上的私有风险改善。对各状态实际观察到的三种回报进行中心化拟合。即时标签只使用前五轮，长期标签另计一次折扣 0.9 的五轮接续收益。训练客户端 0–47，校准客户端 48–71，留出客户端 72–95。校准和留出分别使用 8 和 12 个新种子。训练与评测保留原版 FedAA SGD、本地梯度裁剪、drop_last、客户端训练和验证划分。所有候选均运行 40 轮，终点双分支共享最后一窗的第一轮上传，故每轨迹 528 次真实训练上传。验证反馈和额外前向计算另计。
+
+逐轮控制的独立复验冻结第一次留出的所有模型和所选时间表，使用 15700–15731 的 32 个新种子。confirm_held_summary.json 延用两组固定的留出客户端，confirm_mixed_summary.json 逐种子从原生客户端 48–99 随机选出 24 个、匹配所有方法。两个口径均只在轨迹结束时读取测试指标。
+
+原生即时控制器的独立入口和归因对照
+
+    .venv/bin/python -m diagnostics.native_validated_directions --phase deploy --seed 14600 --output "$base/native_release"
+    .venv/bin/python -m diagnostics.native_validated_directions --phase confirm --output "$base/native_confirm"
+    .venv/bin/python -m diagnostics.native_validated_directions --phase strength --output "$base/native_strength"
+    .venv/bin/python -m diagnostics.summarize_feedback_iterations "$base"
+
+单种子 deploy 使用已冻结的即时规则，可独立运行，只需要原生 MNIST 数据。它输出 result.json 和 training/global_model.pt。前八个评估客户端在本地验证集计算负交叉熵梯度与各客户端上传的点积，并向服务器回报方向收益。先对收益在上传者间标准化并截到 [−2,2]，原始几何权重乘以 exp(0.8 × 标准化收益)，最后归一化。原始零权重保持为零。另八个评估客户端分别用私有验证错误率打分，对全调整、半调整、原权重三种候选作选择，与原权重并列时保留原权重。每五轮重新抽取十六个验证者，每轮按当轮上传重新打分。样本量用于合并各验证者报告。部署无需历史训练分支、不加载 critic，使用原步长 1。每轮前八人各发 12 个方向收益，后八人各评三个候选。学习型对照另评估原模型构造学习器特征。
+
+新种子 confirm 对照复用原生 MLP 历史规则的真实终窗验证。迁移阶段的 8 个种子和后续确认的 12 个种子分开保存。strength 再用校准池的私有验证集选择固定信任强度，以区分方向重加权和额外选择强度两步带来的收益。固定强度也可依赖每轮的方向收益，它是对“第二组验证客户端决定调整多少”的消融。多步策略的作用须单独与同数据的即时学习器、直接打分、时间表逐种子配对。final_summary.json 汇总上述核查，图中的点为各自种子的终点差。
+
+    .venv/bin/python -m diagnostics.native_validated_directions --phase replicate --output "$base/native_replication"
+
+运行 summarize_feedback_iterations 之前先运行 replicate。最后一次独立复验把按错误率打分的逐轮控制器原样用于两个互斥的原生客户端池 48–71 和 72–95，各用 16 个新种子。按事先固定的 32 个病例全部完成。两个池分别报告，合并区间在池内按种子重采样并对两池等权。

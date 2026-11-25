@@ -1,0 +1,12 @@
+{
+  "states": 48,
+  "changed": 27,
+  "chance_ties": 0,
+  "measured_mean_cost_advantage": 0.016774434542415326,
+  "leave_client_pool_out": {
+    "immediate": 0.16666666666666666,
+    "long": 0.3958333333333333,
+    "long_vs_immediate_discounted_benefit": 0.0061661879311195435,
+    "long_vs_step1_discounted_benefit": -0.00786795361739429
+  }
+}

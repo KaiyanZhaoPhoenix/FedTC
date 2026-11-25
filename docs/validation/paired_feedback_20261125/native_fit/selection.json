@@ -1,0 +1,20 @@
+{
+  "means": {
+    "step_0": 0.732465922832489,
+    "step_1": 0.7571119591593742,
+    "step_2": 0.7464276403188705,
+    "direct": 0.7291557490825653,
+    "immediate": 0.7471486702561378,
+    "time_immediate": 0.7319415286183357,
+    "rl": 0.7794638201594353,
+    "time_rl": 0.7769730016589165
+  },
+  "lock": {
+    "incumbent": "step_1",
+    "fixed": "step_1",
+    "schedule": "time_rl",
+    "direct": "direct",
+    "immediate": "immediate",
+    "rl": "rl"
+  }
+}
