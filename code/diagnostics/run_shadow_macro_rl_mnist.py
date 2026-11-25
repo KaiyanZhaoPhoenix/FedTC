@@ -28,12 +28,18 @@ METHODS = ("fixed_1.15", "fixed_1.25", "fixed_1.55", "round_only", "greedy", "sh
 class AnnouncedCohortsMNIST(ShadowMNIST):
     classification_cost = False
 
+    def private_logits(self):
+        if self.args.dataset == "Cifar10":
+            # Only the ten scores per image need to coexist for the client reductions.
+            return torch.cat([self.global_model(batch) for batch in self.private_x.split(128)])
+        return self.global_model(self.private_x)
+
     @torch.no_grad()
     def private_losses(self, parameters):
         if not self.classification_cost:
             return super().private_losses(parameters)
         set_vector(self.global_model, parameters)
-        logits = self.global_model(self.private_x)
+        logits = self.private_logits()
         errors = (logits.argmax(dim=1) != self.private_y).float()
         confidence = F.cross_entropy(logits, self.private_y, reduction="none").clamp(max=self.args.loss_cap)
         combined = errors + .05 * confidence
@@ -63,7 +69,7 @@ def open_world(config, seed, folder):
         return build_world(config, seed, SCENARIO, folder)
     count = config["clients"]
     args = training_parser().parse_args([
-        "--algorithm", "FedTCFixed", "--dataset", "mnist", "--num_clients", str(count),
+        "--algorithm", "FedTCFixed", "--dataset", config.get("dataset", "mnist"), "--num_clients", str(count),
         "--num_sel_clients", str(count//2), "--aggre_num", str(count//2),
         "--training-cohort", "sampled", "--batch_size", "16", "--local_epochs", "1",
         "--global_rounds", str(config["rounds"]), "--macro-length", str(H),
@@ -90,6 +96,8 @@ def open_world(config, seed, folder):
         "attack_schedule_harness_only": schedule,
         "upload_schedule_sha256": fingerprint(world.schedule), "announced_upload_schedule": world.schedule,
         "actions": config["actions"], "utility_weight": 0, "test_policy_input": False,
+        **({"action_kind": "server_step", "tau": 1.15, "final_tau_candidates": [1.15, 1.55]}
+           if config.get("action_kind") == "server_step" else {}),
         "private_cost": "classification error + 0.05 capped cross entropy" if world.classification_cost
                         else "capped cross entropy",
         "validation_fraction": config.get("validation_fraction", .1),

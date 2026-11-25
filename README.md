@@ -14,6 +14,7 @@ FedTC（Federated Trust Calibration）研究在服务器没有干净验证数据
 | 正文与实现对应 | [公式与代码映射](docs/paper_code_mapping.md) |
 | 已完成实验 | [结果索引](results/README.md) |
 | 原生 MNIST 步长控制，12 个留出种子 | [逐种子动作与准确率](docs/validation/paired_feedback_20261125/native_fit/held.json)、[配对统计](docs/validation/paired_feedback_20261125/native_fit/summary.json)、[实验结论](docs/paired_feedback_findings.txt)、[复现命令](docs/paired_feedback_reproduction.txt) |
+| 在服务器上运行 CIFAR-10 步长控制 | [数据格式、接入自检、训练与评估命令](docs/cifar10_step_control.md) |
 | 全部回退的原因 | [审计记录](docs/fallback_audit.md)、[当前限制](docs/limitations.md) |
 | 尚未实现的改进 | [下一版设计](docs/next_version.md) |
 | 来源与整理记录 | [来源](docs/provenance.md)、[验证记录](docs/validation.md) |

@@ -12,16 +12,16 @@ from diagnostics.run_terminal_policy_mnist import (
 )
 
 
-def pool_config(data, output, offset, split_seed):
+def pool_config(data, output, offset, split_seed, dataset="mnist"):
     root = output / f"clients{offset}" / "dataset"
     for part in ("train", "test"):
-        folder = root / "mnist" / part
+        folder = root / dataset / part
         folder.mkdir(parents=True)
         for i in range(24):
-            source = data / "mnist" / part / f"{offset+i}.npz"
+            source = data / dataset / part / f"{offset+i}.npz"
             (folder / f"{i}.npz").symlink_to(source.resolve(strict=True))
     return dict(rounds=40, clients=24, actions=ACTIONS, announced_cohorts=True,
-                validation_fraction=.25, data_root=str(root), split_seed=split_seed)
+                validation_fraction=.25, data_root=str(root), split_seed=split_seed, dataset=dataset)
 
 
 def fit_last(trees, method):

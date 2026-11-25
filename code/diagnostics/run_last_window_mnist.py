@@ -14,7 +14,7 @@ from utils.experiment import set_vector, vector, write_json
 @torch.no_grad()
 def endpoint_cost(world, parameters):
     set_vector(world.global_model, parameters)
-    logits = world.global_model(world.private_x)
+    logits = world.private_logits()
     error = (logits.argmax(dim=1) != world.private_y).float().mean().item()
     losses = F.cross_entropy(logits, world.private_y, reduction="none").clamp(max=world.args.loss_cap)
     per_client = np.array([chunk.mean().item() for chunk in losses.split(world.sizes.tolist())])

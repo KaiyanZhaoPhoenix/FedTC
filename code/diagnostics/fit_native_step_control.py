@@ -1,12 +1,16 @@
-"""Fit native MLP server-step control on real paired five- and ten-round continuations."""
+"""Fit and evaluate server-step control on native MNIST (MLP) or CIFAR-10 (CifarNet)."""
 import argparse
 from concurrent.futures import ProcessPoolExecutor
+from contextlib import ExitStack
+import hashlib
 import json
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import numpy as np
 import torch
 
+from dataset.prepare_cifar10 import check_clients
 from diagnostics.paired_feedback_control import RolloutScorer
 from diagnostics.refit_last_mnist import pool_config
 from diagnostics.run_last_window_mnist import endpoint_cost
@@ -18,6 +22,12 @@ STEPS=(.5,1.,1.5)
 FIT=range(16000,16024)
 TUNE=range(16100,16108)
 HELD=range(16200,16212)
+
+
+def step_pool(data, folder, offset, dataset):
+    config = pool_config(data, folder, offset, 3103, dataset)
+    config.update(actions=list(STEPS), action_kind="server_step", classification_cost=True)
+    return config
 
 
 def directions(w,start,i,schedule,taus=(1.15,)):
@@ -114,7 +124,7 @@ def rollout(task,checkpoint=None):
     else:
         set_vector(w.global_model,model)
         with torch.no_grad():
-            metrics={'accuracy':float(w.global_model(w.private_x).argmax(1).eq(w.private_y).float().mean())}
+            metrics={'accuracy':float(w.private_logits().argmax(1).eq(w.private_y).float().mean())}
     if checkpoint is not None:
         checkpoint.parent.mkdir(parents=True,exist_ok=True)
         with checkpoint.open('xb') as output:
@@ -137,7 +147,7 @@ def shared_evaluation(task):
             else:
                 set_vector(w.global_model,model)
                 with torch.no_grad():
-                    acc=w.global_model(w.private_x).argmax(1).eq(w.private_y).float().mean()
+                    acc=w.private_logits().argmax(1).eq(w.private_y).float().mean()
                 metrics={'accuracy':float(acc)}
             for name in names:
                 result[name]=dict(seed=seed,identity=stamp,method=name,actions=history,metrics=metrics)
@@ -154,38 +164,124 @@ def shared_evaluation(task):
     return result
 
 
+def dataset_name(value):
+    names = {"mnist": "mnist", "cifar10": "Cifar10"}
+    try:
+        return names[value.lower().replace("-", "")]
+    except KeyError:
+        raise argparse.ArgumentTypeError("Choose mnist or Cifar10")
+
+
+def check_source(data, dataset, ids):
+    root = data / dataset
+    if dataset == "Cifar10":
+        check_clients(root, ids)
+    else:
+        for i in ids:
+            for part in ("train", "test"):
+                path = root / part / f"{i}.npz"
+                if not path.is_file():
+                    raise ValueError(f"Missing client partition: {path}")
+
+
+def held_digest(data, dataset):
+    files = {f"{part}/{i}.npz": hashlib.sha256((data / dataset / part / f"{i}.npz").read_bytes()).hexdigest()
+             for part in ("train", "test") for i in range(72, 96)}
+    return fingerprint(files)
+
+
+def load_rules(out, requested):
+    rules = json.loads((out / "policy.json").read_text())
+    path = out / "protocol.json"
+    protocol = json.loads(path.read_text()) if path.is_file() else {}
+    # The protocol and policies released before CIFAR support used MNIST exclusively.
+    datasets = {rule.get("dataset", "mnist") for rule in rules.values()}
+    if "dataset" in protocol:
+        datasets.add(protocol["dataset"])
+    if len(datasets) != 1:
+        raise ValueError("The dataset tags in the frozen rules and protocol disagree")
+    dataset = datasets.pop()
+    if requested is not None and requested != dataset:
+        raise ValueError(f"Frozen policy uses {dataset}, requested {requested}. Run --phase dev for {requested} first.")
+    return dataset, protocol, rules
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--phase',choices=('dev','held','deploy'),required=True)
+    p.add_argument('--output',type=Path,help='New directory for dev; existing dev directory for held/deploy')
+    p.add_argument('--phase',choices=('check','dev','held','deploy'),required=True)
+    p.add_argument('--dataset',type=dataset_name,help='mnist (dev default) or Cifar10; held/deploy infer the frozen dataset')
+    p.add_argument('--data-root',type=Path,help='Parent of mnist/ or Cifar10/ (default: code/dataset during dev)')
     p.add_argument('--jobs',type=int,default=4)
     p.add_argument('--seed',type=int)
-    p.add_argument('--checkpoint',type=Path,help='Save the deployed MLP to a new file')
+    p.add_argument('--checkpoint',type=Path,help='Save the deployed model state_dict to a new file')
     p.add_argument('--method',choices=('incumbent','fixed','schedule','direct','immediate','rl'),default='rl')
     args=p.parse_args()
-    out=args.output
+    if args.phase != 'check' and args.output is None:
+        p.error('--output is required for dev, held and deploy')
+    if args.jobs < 1 or (args.seed is not None and args.seed < 0):
+        p.error('--jobs must be positive and --seed must be nonnegative')
+    if args.phase == 'deploy' and args.seed is None:
+        p.error('--seed is required for deployment')
+    if args.checkpoint and (args.phase != 'deploy' or args.checkpoint.exists()):
+        p.error('--checkpoint requires deploy and a new file path')
+    out = args.output.expanduser().resolve() if args.output else None
+    dev = args.phase == 'dev'
+    dataset, protocol = args.dataset or 'mnist', {}
+    try:
+        if args.phase in ('held', 'deploy'):
+            dataset, protocol, rules = load_rules(out, args.dataset)
+        data = Path(args.data_root or protocol.get('data_root') or Path(__file__).resolve().parents[1] / 'dataset')
+        data = data.expanduser().resolve()
+        # Legacy held runs can still reuse their saved pool, including its custom source path.
+        legacy_pool = (args.phase == 'held' and args.data_root is None and 'data_root' not in protocol
+                       and (out / 'pools.json').is_file())
+        if not legacy_pool:
+            check_source(data, dataset, range(96) if dev or args.phase == 'check' else range(72, 96))
+            if 'held_files_sha256' in protocol and held_digest(data, dataset) != protocol['held_files_sha256']:
+                raise ValueError("Client files 72–95 differ from the frozen protocol. Supply the original partition.")
+    except (ValueError, OSError) as exc:
+        p.exit(1, f"{exc}\n")
+    if args.phase == 'check':
+        with TemporaryDirectory() as f:
+            folder = Path(f)
+            config = step_pool(data, folder, 0, dataset)
+            world, schedule = open_world(config, args.seed or 0, folder / 'check')
+            _, features, pilot = probe(world, vector(world.global_model), 0, schedule)
+            if not np.isfinite(features).all() or not np.isfinite(pilot).all():
+                raise ValueError("Nonfinite private feedback during first-round probe")
+            print(json.dumps(dict(dataset=dataset, model=type(world.global_model).__name__,
+                                  device=world.args.device, uploads=len(world.schedule[0]),
+                                  steps=STEPS, private_gains=pilot.tolist())))
+        return
     if args.phase=='deploy':
-        if args.seed is None: p.error('--seed is required for deployment')
-        import tempfile
-        with tempfile.TemporaryDirectory() as f:
+        with TemporaryDirectory() as f:
             folder=Path(f)
-            cfg=pool_config(Path('dataset').resolve(),folder,72,3103)
-            rule=json.loads((out/'policy.json').read_text())[args.method]
+            cfg=step_pool(data,folder,72,dataset)
+            rule=rules[args.method]
             row=rollout((cfg,args.seed,folder/'trajectory',args.method,rule,True),args.checkpoint)
             print(json.dumps(row))
         return
-    dev=args.phase=='dev'
-    with ProcessPoolExecutor(args.jobs) as pool:
+    with ExitStack() as stack:
+        # Keep client links alive until every worker exits, including on an exception.
+        if not dev and not legacy_pool:
+            folder = Path(stack.enter_context(TemporaryDirectory()))
+            config = step_pool(data, folder, 72, dataset)
+        pool = stack.enter_context(ProcessPoolExecutor(args.jobs))
         if dev:
             out.mkdir(parents=True,exist_ok=False)
-            write_json(out/'protocol.json',dict(steps=STEPS,fit=list(FIT),tune=list(TUNE),held=list(HELD),
+            write_json(out/'protocol.json',dict(dataset=dataset, data_root=str(data), held_files_sha256=held_digest(data,dataset),
+                steps=STEPS,fit=list(FIT),tune=list(TUNE),held=list(HELD),
                 client_pools=[0,24,48,72],H=5,gamma=.9,primary='final test accuracy',
                 paired='all actions: same five rounds, then five more at native step 1; final window uses common tau check',
                 threshold='positive paired 95% lower bound vs incumbent, tuned fixed, time, immediate and direct'))
-            cfgs=[pool_config(Path('dataset').resolve(),out,offset,3103) for offset in (0,24,48,72)]
+            cfgs=[step_pool(data,out,offset,dataset) for offset in (0,24,48,72)]
             write_json(out/'pools.json',cfgs)
             tasks=[(cfgs[i%2],s,out/'fit'/str(s)) for i,s in enumerate(FIT)]
-            fit=[r for group in pool.map(fit_seed,tasks) for r in group]
+            fit=[]
+            for seed, group in zip(FIT, pool.map(fit_seed,tasks)):
+                fit.extend(group)
+                print(f'fit seed {seed} complete', flush=True)
             write_json(out/'paired_training.json',fit)
             x=[r['x'] for r in fit]
             y=np.array([r['labels'] for r in fit])
@@ -201,11 +297,15 @@ def main():
                 rules['time_'+k]=dict(time=schedule)
             config=cfgs[2];bank=TUNE
         else:
-            config=json.loads((out/'pools.json').read_text())[3]
-            rules=json.loads((out/'policy.json').read_text());bank=HELD
+            if legacy_pool:
+                config=json.loads((out/'pools.json').read_text())[3]
+            bank=protocol.get('held', HELD)
         split='tune' if dev else 'held'
         tasks=[(config,s,out/split/str(s),rules,not dev) for s in bank]
-        evaluations=list(pool.map(shared_evaluation,tasks))
+        evaluations=[]
+        for seed, result in zip(bank, pool.map(shared_evaluation,tasks)):
+            evaluations.append(result)
+            print(f'{split} seed {seed} complete', flush=True)
         rows={k:[r[k] for r in evaluations] for k in rules}
         write_json(out/(split+'.json'),rows)
         if dev:
@@ -215,10 +315,10 @@ def main():
                   'schedule':winner(['time_immediate','time_rl','step_0','step_1','step_2']),
                   'direct':'direct','immediate':'immediate','rl':'rl'}
             write_json(out/'selection.json',dict(means=mean,lock=lock))
-            write_json(out/'policy.json',{k:rules[v] for k,v in lock.items()})
+            write_json(out/'policy.json',{k:dict(rules[v], dataset=dataset) for k,v in lock.items()})
             print('locked',mean,lock,flush=True)
         else:
-            boot=np.random.default_rng(241).integers(len(HELD),size=(20000,len(HELD)))
+            boot=np.random.default_rng(241).integers(len(bank),size=(20000,len(bank)))
             summary={}
             for ref in rows:
                 summary[ref]={}
