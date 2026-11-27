@@ -2,6 +2,7 @@
 
 Run commands in this directory. Start with [installation and reproduction](../docs/reproduction.md), [method versions](../docs/method.md), and [SAC definition](../docs/sac.md).
 
+- CIFAR-10 + ResNet-20 (100 rounds): [server instructions](../docs/cifar10_resnet_100.md), [training configuration](configs/cifar10_resnet_100r.json).
 - Entry point: `main.py --help`.
 - Exact study data: `dataset/prepare_mnist.py`; no generated data are bundled.
 - Tests: `python -m unittest discover -s tests -v`.

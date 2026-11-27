@@ -1,4 +1,6 @@
-# 在服务器上运行 CIFAR-10 步长控制
+# CIFAR-10 + CifarNet 的 40 轮实验
+
+本页保留 40 轮 CifarNet 实验的兼容命令。当前服务器任务使用 ResNet-20 和 100 轮，见 [FedTCStep 实验指南](cifar10_resnet_100.md)。
 
 实验入口是 `python -m diagnostics.fit_native_step_control --dataset Cifar10`。它使用仓库的三通道卷积模型 `CifarNet`，每 5 轮从 `0.5、1.0、1.5` 中选择服务器更新步长。完整实验需要先在 CIFAR-10 上拟合策略，然后冻结并评测。本地已用合成图像检查接口，真实 CIFAR-10 的准确率和 RL 收益待服务器实测。
 
@@ -40,7 +42,7 @@ python -m diagnostics.fit_native_step_control --phase check \
   --dataset Cifar10 --data-root "$DATA_ROOT"
 ```
 
-自检读取 96 个客户端的文件，使用第一个池的 12 个上传者完成一次本地训练和聚合，再在私有验证样本上给三个候选步长打分。最后一行应含 `"model": "CifarNet"`、`"uploads": 12` 和三个有限的 `private_gains`。这三个数是首轮私有成本的改善量。
+兼容入口的单轮检查使用第一个 24 人池，从中选 12 个上传者完成本地训练和聚合，再在私有验证样本上给三个候选步长打分。要检查四个池共 96 人的文件，使用第 2 节的 `--verify-only`。单轮检查的最后一行应含 `"model": "CifarNet"`、`"uploads": 12` 和三个有限的 `private_gains`。这三个数是首轮私有成本的改善量。
 
 ## 4. 训练、留出对照和保存模型
 
@@ -68,7 +70,7 @@ python -m diagnostics.fit_native_step_control --phase deploy \
 
 | 输出文件 | 可以回答的问题 |
 |---|---|
-| `protocol.json`、`selection.json` | 用了哪些种子、步长、客户端池？哪条固定策略和时间表由验证集选出？ |
+| `config.json`、`protocol.json`、`selection.json` | 新运行的种子列表、步长和客户端池，以及验证集选出的固定策略和时间表。 |
 | `paired_training.json` | 每个配对起点的状态特征和三个候选的五轮、两窗口训练标签是多少？ |
 | `held.json` | 每个种子实际执行了哪些动作？动作编号 0、1、2 依次对应步长 0.5、1.0、1.5；原始准确率为 0–1。 |
 | `summary.json` | `[对照]["rl"]["accuracy"]` 的 `mean` 是 RL 最终测试准确率（%），`diff` 和 `ci95` 是 RL 减对照的配对差及其按种子重采样的 95% 区间，单位为百分点。`worst10` 是准确率最低的 3 个客户端的平均值。 |

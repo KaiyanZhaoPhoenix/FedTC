@@ -2,6 +2,8 @@
 """FedAA-native entry extended with FedTC and shared baselines."""
 import argparse
 import copy
+import json
+import sys
 from datetime import datetime
 import math
 import os
@@ -18,7 +20,7 @@ from servers.serverFedTC import FedTC
 from utils.data_utils import configure_data_root
 from utils.models import OneHiddenLayerFc, TwoHiddenLayerFc, CifarNet, Logistic, ResNet2
 
-ALGORITHMS = ('FedTC', 'FedAA', 'FedAvg', 'RFA', 'TrimmedMean', 'MultiKrum', 'FedTCFixed', 'FedTCSAC', 'FedTCSACGate')
+ALGORITHMS = ('FedTCStep', 'FedTC', 'FedAA', 'FedAvg', 'RFA', 'TrimmedMean', 'MultiKrum', 'FedTCFixed', 'FedTCSAC', 'FedTCSACGate')
 ROOT = Path(__file__).resolve().parent
 
 
@@ -42,14 +44,14 @@ def parser():
     p.add_argument('-data', '--dataset', default='mnist')
     p.add_argument('--data-root', default=str(ROOT / 'dataset'))
     p.add_argument('-nb', '--num_classes', type=int, default=10)
-    p.add_argument('-lbs', '--batch_size', type=int, default=64)
-    p.add_argument('-lr', '--local_learning_rate', type=float, default=.1)
-    p.add_argument('-ls', '--local_epochs', type=int, default=20)
+    p.add_argument('-lbs', '--batch_size', '--batch-size', type=int, default=64)
+    p.add_argument('-lr', '--local_learning_rate', '--local-learning-rate', type=float, default=.1)
+    p.add_argument('-ls', '--local_epochs', '--local-epochs', type=int, default=20)
     p.add_argument('-ld', '--learning_rate_decay', type=boolean, nargs='?', const=True, default=False)
     p.add_argument('-ldg', '--learning_rate_decay_gamma', type=float, default=.99)
-    p.add_argument('-gr', '--global_rounds', type=int, default=200)
-    p.add_argument('-nc', '--num_clients', type=int, default=100)
-    p.add_argument('-ns', '--num_sel_clients', type=int, default=100)
+    p.add_argument('-gr', '--global_rounds', '--global-rounds', type=int, default=200)
+    p.add_argument('-nc', '--num_clients', '--num-clients', type=int, default=100)
+    p.add_argument('-ns', '--num_sel_clients', '--clients-per-round', type=int, default=100)
     p.add_argument('-an', '--aggre_num', type=int, default=50)
     p.add_argument('-seed', '--seed', type=int, default=1)
     p.add_argument('-eg', '--eval_gap', type=int, default=1)
@@ -96,10 +98,60 @@ def parser():
     p.add_argument('--sac-target-entropy', type=float, default=-2.)
     p.add_argument('--audit-validation', action='store_true')
     p.add_argument('--audit-shadow-every', type=int, default=0)
+    p.add_argument('--config', help='JSON training defaults; explicit CLI options take precedence')
+    p.add_argument('--model', dest='model_name', choices=('auto','mlp','cifarnet','resnet20','resnet18'), default='auto')
+    p.add_argument('--local-steps', type=int, help='Optimizer updates per training client per round (overrides local epochs)')
+    p.add_argument('--dirichlet-alpha', type=float, help='Expected alpha of the prepared data partition')
+    p.add_argument('--partition-clients', type=int, help='Total partitions prepared on disk')
+    p.add_argument('--partition-seed', type=int, help='Seed used to create the native partition')
+    p.add_argument('--phase', choices=('check','dev','held','deploy'), default='deploy')
+    p.add_argument('--policy', help='Frozen policy.json produced by dev')
+    p.add_argument('--method', choices=('rl','immediate','fixed','schedule','incumbent','direct'), default='rl')
+    p.add_argument('--cohort-schedule', choices=('uniform','grouped'), default='grouped')
+    p.add_argument('--pool-offsets', type=int, nargs=4, default=None, metavar=('FIT_A','FIT_B','TUNE','HELD'))
+    p.add_argument('--fit-seeds', type=int, nargs='+', default=list(range(16000,16024)))
+    p.add_argument('--tune-seeds', type=int, nargs='+', default=list(range(16100,16108)))
+    p.add_argument('--held-seeds', type=int, nargs='+', default=list(range(16200,16212)))
+    p.add_argument('--jobs', type=int, default=1, help='Concurrent CPU trajectories')
     return p
 
 
+def parse_config(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    pre = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
+    pre.add_argument('--config')
+    config = pre.parse_known_args(argv)[0].config
+    cli = parser()
+    defaults = []
+    if config:
+        values = json.loads(Path(config).read_text())
+        epoch_flags = ('-ls', '--local_epochs', '--local-epochs')
+        if any(arg.split('=', 1)[0] in epoch_flags for arg in argv):
+            values.pop('local_steps', None)
+        actions = {action.dest: action for action in cli._actions}
+        for key, value in values.items():
+            if key not in actions or key in ('config','help'):
+                cli.error(f'Unknown config field {key}')
+            action = actions[key]
+            option = action.option_strings[-1]
+            if action.nargs == 0:
+                if not isinstance(value, bool):
+                    cli.error(f'{key} requires true or false')
+                if value:
+                    defaults.append(option)
+            elif value is not None:
+                defaults.extend([option, *map(str, value if isinstance(value, list) else [value])])
+    return cli.parse_args(defaults + argv)
+
+
 def validate(args):
+    if args.algorithm == 'FedTCStep':
+        args.aggre_num = args.num_sel_clients  # geometric aggregation uses the whole upload cohort
+    if args.local_steps is not None and args.local_steps < 1:
+        raise ValueError('local_steps must be positive')
+    if args.dirichlet_alpha is not None:
+        from dataset.prepare_cifar10 import verify_alpha
+        verify_alpha(Path(args.data_root) / args.dataset, args.dirichlet_alpha)
     if not 1 <= args.aggre_num <= args.num_sel_clients <= args.num_clients:
         raise ValueError('Require 1 <= aggre_num <= num_sel_clients <= num_clients.')
     if min(args.batch_size, args.global_rounds, args.local_epochs, args.eval_gap, args.threads, args.buffer_size) < 1:
@@ -136,7 +188,7 @@ def validate(args):
         validate_action([args.fixed_lambda, args.fixed_tau])
         if args.audit_shadow_every < 0:
             raise ValueError('audit_shadow_every must be nonnegative.')
-        if args.macro_length < 1 or args.global_rounds % args.macro_length:
+        if args.macro_length < 1 or (args.algorithm != 'FedTCStep' and args.global_rounds % args.macro_length):
             raise ValueError('FedTC rounds must be divisible by macro_length.')
         if args.validation_fraction <= 0 or args.alpha != 0:
             raise ValueError('FedTC requires validation_fraction > 0 and alpha=0.')
@@ -146,7 +198,18 @@ def validate(args):
 
 
 def make_model(args):
-    if args.dataset == 'mnist':
+    choice = getattr(args, 'model_name', 'auto')
+    if choice in ('resnet20', 'resnet18', 'cifarnet'):
+        if args.dataset != 'Cifar10':
+            raise ValueError(f'{choice} requires 3-channel Cifar10 data')
+        from utils.cifar_resnet import resnet20
+        from utils.resnet import resnet18
+        model = {'resnet20': resnet20, 'resnet18': resnet18, 'cifarnet': CifarNet}[choice](num_classes=args.num_classes)
+    elif choice == 'mlp':
+        if args.dataset not in ('mnist','emnist','fashionmnist'):
+            raise ValueError('mlp expects 28x28 grayscale data')
+        model = OneHiddenLayerFc(784, args.num_classes)
+    elif args.dataset == 'mnist':
         model = OneHiddenLayerFc(784, args.num_classes)
     elif args.dataset == 'emnist':
         model = TwoHiddenLayerFc(784, args.num_classes)
@@ -163,7 +226,13 @@ def make_model(args):
 
 def prepare(args):
     validate(args)
-    os.environ['CUDA_VISIBLE_DEVICES'] = args.device_id
+    if args.algorithm == 'FedTCStep':
+        # Job schedulers may already have assigned a physical GPU or a MIG device.
+        os.environ.setdefault('CUDA_VISIBLE_DEVICES', args.device_id)
+        if args.device == 'cuda':
+            os.environ.setdefault('CUBLAS_WORKSPACE_CONFIG', ':4096:8')
+    else:
+        os.environ['CUDA_VISIBLE_DEVICES'] = args.device_id
     if args.device == 'cuda' and not torch.cuda.is_available():
         raise ValueError('CUDA requested but unavailable; use --device cpu.')
     torch.set_num_threads(args.threads)
@@ -184,6 +253,9 @@ def prepare(args):
 
 
 def run(args):
+    if args.algorithm == 'FedTCStep':
+        from servers.step_experiment import run_experiment
+        return run_experiment(args)
     results = []
     for repetition in range(args.prev, args.times):
         current = copy.deepcopy(args)
@@ -205,4 +277,4 @@ def run(args):
 
 
 if __name__ == '__main__':
-    run(parser().parse_args())
+    run(parse_config())

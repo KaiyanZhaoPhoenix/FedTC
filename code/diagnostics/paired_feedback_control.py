@@ -6,6 +6,7 @@ import torch
 import torch.nn.functional as F
 
 from algorithms.baselines import aggregate
+from algorithms.fedtc.step_control import RolloutScorer
 from diagnostics.centered_control import centered
 from diagnostics.stage_a_world import H, WINDOWS
 
@@ -105,24 +106,3 @@ def paired_labels(world,start,t,first,initial,panels,reference):
             gains.append(p.cost(before)-p.cost(p.reports(model)))
         labels.append((gains[0],sum(DISCOUNT**k*g for k,g in enumerate(gains))))
     return np.array(labels)
-
-
-@dataclass
-class RolloutScorer:
-    scale: np.ndarray
-    weight: np.ndarray
-
-    @classmethod
-    def fit(cls, contexts, labels, penalty):
-        x=np.array(contexts)
-        differences=x-x.mean(axis=1,keepdims=True)
-        flat=differences.reshape(-1,x.shape[-1])
-        scale=np.maximum(flat.std(0),1e-4)
-        flat=flat/scale
-        y=np.array(labels)
-        y=(y-y.mean(axis=1,keepdims=True)).ravel()
-        weight=np.linalg.solve(flat.T@flat+penalty*np.eye(flat.shape[1]),flat.T@y)
-        return cls(scale,weight)
-
-    def scores(self, x):
-        return (x-x.mean(axis=0))/self.scale @ self.weight

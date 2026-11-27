@@ -113,12 +113,22 @@ def verify_archive(root):
         path = ROOT/'code'/name
         if not path.exists() or hashlib.sha256(path.read_bytes()).hexdigest()!=digest:
             source_differences.append(name)
-    if sac and source_differences:
-        raise ValueError(f'SAC study source changed: {source_differences}')
+    frozen_sources = {}
+    if sac:
+        snapshot = ROOT / 'docs/validation/source_at_d8f23a0'
+        archived = {'main.py', 'clients/clientFedAA.py', 'servers/serverShared.py'}
+        for name in archived:
+            original = snapshot / name
+            if not original.is_file() or hashlib.sha256(original.read_bytes()).hexdigest() != plan['source_sha256'][name]:
+                raise ValueError(f'Frozen SAC source hash mismatch: {name}')
+            frozen_sources[name] = plan['source_sha256'][name]
+        unexpected = set(source_differences) - archived
+        if unexpected:
+            raise ValueError(f'SAC study source changed: {sorted(unexpected)}')
     return {'study':root.name,'archived_files_verified':len(archive['entries']), 'runs_verified':len(results),
             'tuning_runs_verified':tuning_count,
             'checks':['archive file hashes','raw accuracy/curves','post-warmup execution counts','shared data/initialization/training schedules'],
-            'historical_source_differences':source_differences,
+            'historical_source_differences':source_differences, 'verified_frozen_sources':frozen_sources,
             'checkpoint_checks':'Not repeated: model and replay checkpoints are not published.',
             'scope':'Single-seed measurements; not an independent training reproduction or a significance test.'}
 

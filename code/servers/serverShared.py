@@ -88,7 +88,7 @@ class SharedServer(Server):
         utilities = {}
         for client in workers:
             client.round_index = round_index
-            needs_utility = self.algorithm.startswith('FedTC') and client.id in train_ids
+            needs_utility = self.algorithm.startswith('FedTC') and self.algorithm != 'FedTCStep' and client.id in train_ids
             before = client.bounded_loss(client.model, self.args.loss_cap, validation=False) if needs_utility else 0.
             devices = [torch.cuda.current_device()] if self.device == 'cuda' else []
             # Controller sampling cannot change local minibatches or dropout RNG.
